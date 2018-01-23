@@ -154,7 +154,7 @@ export default class Board {
 
         for (let i = 0; i < this.areasLayers[player.colorName].length; i++) {
             if (this.areasLayers[player.colorName][i].firstPoint().x === bug.x &&
-                this.areasLayers[player.colorName][i].firstPoint().y === bug.y) return;
+                this.areasLayers[player.colorName][i].firstPoint().y === bug.y ) return;
         }
 
         let atCornerCheck = () => {
@@ -333,19 +333,12 @@ export default class Board {
         }
 
         for (let i = 0; i < playerLayer.length; i++) {
-            let a = JSON.stringify(_.sortBy(playerLayer[i].points, (x) => 1000 * x.x + x.y));
-            let b = JSON.stringify(_.sortBy(territory.points, (x) => 1000 * x.x + x.y));
+            let a = playerLayer[i].coords().toString();//JSON.stringify(_.sortBy(playerLayer[i].points, (x) => 1000 * x.x + x.y));
+            let b = territory.coords().toString();//JSON.stringify(_.sortBy(territory.points, (x) => 1000 * x.x + x.y));
 
             if (a === b) {
                 console.log("Filtered!");
                 return;
-            }
-        }
-
-        // debugger;
-        for (let i = 0; i < playerLayer.length; i++) {
-            if (playerLayer[i].containingRect().toString() === territory.containingRect().toString() && playerLayer[i].size() <= territory.size()) {
-                playerLayer.splice(i, 1);
             }
         }
 
@@ -400,8 +393,6 @@ export default class Board {
     }
 
     draw(ctx) {
-
-
         ctx.beginPath();
         for (let y = 0; y <= this.yCells; y++) {
             ctx.moveTo(0.5 + y * this.gridSize + this.padding, this.padding);
@@ -427,7 +418,12 @@ export default class Board {
             ctx.restore();
         }
 
-        this.playerPoints.forEach(i => i.draw(ctx));
+        this.playerPoints.forEach(i => {
+            if (i.dead) i.draw(ctx)
+        });
+        this.playerPoints.forEach(i => {
+            if (!i.dead) i.draw(ctx)
+        });
     }
 
     maxWidth() {

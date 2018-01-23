@@ -64,8 +64,8 @@ addEventListener('resize', () => {
 
 // Implementation
 let objects = [];
-const board = new Board(ctx, canvas.width, canvas.height);
-const mousePoint = new GraphicalPoint(ctx, 100, 100, currentPlayer.color);
+const board = new Board(canvas.width, canvas.height);
+const mousePoint = new GraphicalPoint(100, 100, currentPlayer.color, 5);
 
 objects.push(board);
 objects.push(mousePoint);

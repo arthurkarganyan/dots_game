@@ -156,4 +156,31 @@ describe("Board", function () {
         expect(Object.values(board.areasLayers).length).toBe(1);
         expect(board.areasLayers[redPlayer.colorName].length).toBe(1);
     });
+
+    it("slowEscapeAlgorithm #4 uniq", function () {
+        massPoints([
+            [3, 1],
+            [4, 1],
+            [5, 2],
+            [1, 3],
+            [5, 3],
+            [2, 4],
+            [4, 4],
+            [5, 3],
+            [3, 3],
+        ], redPlayer);
+
+        massPoints([
+            [3, 2],
+            [4, 2],
+            [2, 3],
+            [4, 3],
+            [3, 4],
+        ], bluePlayer);
+
+        board.addPlayerPoint(3, 5, redPlayer);
+        board.addPlayerPoint(2, 2, redPlayer);
+        // expect(Object.values(board.areasLayers).length).toBe(1);
+        expect(board.areasLayers[redPlayer.colorName].length).toBe(1);
+    });
 });

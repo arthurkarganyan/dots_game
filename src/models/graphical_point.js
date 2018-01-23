@@ -1,10 +1,10 @@
 import GraphicalObject from "./graphical_object";
 
 export default class GraphicalPoint {
-    constructor(x, y, color) {
+    constructor(x, y, color, radius) {
         this.x = x;
         this.y = y;
-        this.radius = 7;
+        this.radius = radius || 7;
         this.color = color;
     }
 
