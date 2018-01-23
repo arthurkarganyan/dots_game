@@ -61,6 +61,24 @@ class Territory {
     firstPoint() {
         return this.points[0];
     }
+
+    draw(ctx, gridSize, padding) {
+        ctx.strokeStyle = this.player.color;
+        ctx.fillStyle = this.player.backColor;
+        ctx.lineWidth = 3;
+
+        ctx.beginPath();
+
+        ctx.moveTo(gridSize * this.at(0).x + padding, gridSize * this.at(0).y + padding);
+
+        this.points.slice(1).forEach(i => {
+            ctx.lineTo(gridSize * i.x + padding, gridSize * i.y + padding);
+        });
+
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+    }
 }
 
 export default class Board {
@@ -204,7 +222,7 @@ export default class Board {
 
                 if (slowEscapeMarkedMap[y][x] || this.playerPointsMap[y][x] && !this.playerPointsMap[y][x].dead && this.playerPointsMap[y][x].player !== point.player) {
                     if (this.playerPointsMap[y][x] && !this.playerPointsMap[y][x].dead && this.playerPointsMap[y][x].player !== point.player) {
-                       player = this.playerPointsMap[y][x].player
+                        player = this.playerPointsMap[y][x].player
                     }
                     continue;
                 } else {
@@ -400,27 +418,11 @@ export default class Board {
         ctx.closePath();
 
         // TODO refactoring to Territory
-        
-        for (let player in this.areasLayers) {
+
+        for (let playerColor in this.areasLayers) {
             ctx.save();
-            this.areasLayers[player.colorName].forEach(territory => {
-                ctx.strokeStyle = player.color;
-                ctx.fillStyle = player.backColor;
-                ctx.lineWidth = 3;
-
-                ctx.beginPath();
-
-                ctx.moveTo(this.gridSize * territory.at(0).x + this.padding, this.gridSize * territory.at(0).y + this.padding);
-
-                territory.points.slice(1).forEach(i => {
-                    ctx.lineTo(this.gridSize * i.x + this.padding, this.gridSize * i.y + this.padding);
-                });
-
-                ctx.closePath();
-
-                ctx.fill();
-                ctx.stroke();
-
+            this.areasLayers[playerColor].forEach(territory => {
+                territory.draw(ctx, this.gridSize, this.padding)
             });
             ctx.restore();
         }
