@@ -22,6 +22,10 @@ export default class PlayerPoint {
     }
 
     textRepresentation() {
-        return this.player.textRepresentation;
+        if(this.dead){
+            return this.player.textRepresentationDead;
+        } else {
+            return this.player.textRepresentation;
+        }
     }
 }
