@@ -94,7 +94,14 @@ export default class Board {
         return true;
     }
 
+    // TODO refactoring
     findDeadPoints(newPoint) {
+        if (!this.fastEscapeAlgorithm(newPoint)) {
+            if (!this.slowEscapeAlgorithm(newPoint)) {
+                newPoint.dead = true;
+            }
+        }
+
         for (let i = 0; i < this.playerPoints.length; i++) {
             if (this.playerPoints[i].player === newPoint.player) continue;
             if (this.playerPoints[i].dead) continue;
@@ -110,7 +117,7 @@ export default class Board {
 
     // bug algorithm used (obstacle avoidance)
     createTerritoryAround(failedEscapeMap, player) {
-        if (!this.areasLayers[player]) this.areasLayers[player] = [];
+        if (!this.areasLayers[player.colorName]) this.areasLayers[player.colorName] = [];
 
         let territory = new Territory(player);
         let bug = {xStart: -1, yStart: -1, x: -1, y: -1, direction: "right"};
@@ -127,9 +134,9 @@ export default class Board {
                 }
             }
 
-        for (let i = 0; i < this.areasLayers[player].length; i++) {
-            if (this.areasLayers[player][i].firstPoint().x === bug.x &&
-                this.areasLayers[player][i].firstPoint().y === bug.y) return;
+        for (let i = 0; i < this.areasLayers[player.colorName].length; i++) {
+            if (this.areasLayers[player.colorName][i].firstPoint().x === bug.x &&
+                this.areasLayers[player.colorName][i].firstPoint().y === bug.y) return;
         }
 
         let atCornerCheck = () => {
@@ -156,7 +163,7 @@ export default class Board {
         while (bug.yStart !== bug.y || bug.xStart !== bug.x) {
             // TODO possible bug when is another dot owned by 3rd player
 
-            if (this.playerPointsMap[bug.y][bug.x] && this.playerPointsMap[bug.y][bug.x].player !== player &&
+            if (this.playerPointsMap[bug.y][bug.x] && this.playerPointsMap[bug.y][bug.x].player === player &&
                 territory.points.slice(-1)[0] !== this.playerPointsMap[bug.y][bug.x] // uniqueness check
             )
                 territory.push(this.playerPointsMap[bug.y][bug.x]);
@@ -167,7 +174,8 @@ export default class Board {
         }
 
         territory.push(this.playerPointsMap[bug.yStart][bug.xStart]);
-        this.areasLayers[player].push(territory);
+
+        this.areasLayers[player.colorName].push(territory);
     }
 
     slowEscapeAlgorithm(point) {
@@ -177,9 +185,9 @@ export default class Board {
         for (let i = 0; i < this.yCells; i++) {
             slowEscapeMarkedMap[i] = new Array(this.xCells);
         }
-        let player;
 
         slowEscapeMarkedMap[point.y][point.x] = 1;
+        let player;
 
         while (toVisit.length) { // While there are still squares to visit
             let arr = [
@@ -194,20 +202,18 @@ export default class Board {
                 let y;
                 [x, y] = arr[i];
 
-                if (this.playerPointsMap[y][x] && this.playerPointsMap[y][x].player !== point.player || slowEscapeMarkedMap[y][x]) {
-                    if (this.playerPointsMap[y][x] && this.playerPointsMap[y][x].player !== point.player) {
-                        player = point.player;
+                if (slowEscapeMarkedMap[y][x] || this.playerPointsMap[y][x] && !this.playerPointsMap[y][x].dead && this.playerPointsMap[y][x].player !== point.player) {
+                    if (this.playerPointsMap[y][x] && !this.playerPointsMap[y][x].dead && this.playerPointsMap[y][x].player !== point.player) {
+                       player = this.playerPointsMap[y][x].player
                     }
                     continue;
+                } else {
+                    toVisit.push([x, y]);
                 }
 
                 // TODO possible bug
                 if (x === 0 || y === 0 || x === this.xCells - 1 || y === this.yCells) {
                     return true;
-                }
-
-                if (!this.playerPointsMap[y][x] || this.playerPointsMap[y][x].player === point.player) {
-                    toVisit.push([x, y]);
                 }
 
                 slowEscapeMarkedMap[y][x] = 1;
@@ -291,8 +297,8 @@ export default class Board {
 
     remapArea() {
         for (let player in this.areasLayers) {
-            for (let i = 0; i < this.areasLayers[player].length; i++) {
-                let territory = this.areasLayers[player][i];
+            for (let i = 0; i < this.areasLayers[player.colorName].length; i++) {
+                let territory = this.areasLayers[player.colorName][i];
 
                 // array.splice(index, 1);
             }
@@ -302,10 +308,10 @@ export default class Board {
     // Uniqness check
     addLayer(territory) {
         let player = territory.player;
-        let playerLayer = this.areasLayers[player];
+        let playerLayer = this.areasLayers[player.colorName];
 
         if (playerLayer === undefined) {
-            return this.areasLayers[player] = [territory];
+            return this.areasLayers[player.colorName] = [territory];
         }
 
         for (let i = 0; i < playerLayer.length; i++) {
@@ -329,7 +335,6 @@ export default class Board {
     }
 
     calculateCapturedArea(x, y, newPoint, territory) {
-        // console.log(x, y);
         if (x === newPoint.x && y === newPoint.y && territory.size() >= 1 && territory.size() <= 3) {
             console.log("???");
             return;
@@ -394,11 +399,11 @@ export default class Board {
         ctx.stroke();
         ctx.closePath();
 
-
+        // TODO refactoring to Territory
+        
         for (let player in this.areasLayers) {
             ctx.save();
-            this.areasLayers[player].forEach(territory => {
-                console.log(territory.toString());
+            this.areasLayers[player.colorName].forEach(territory => {
                 ctx.strokeStyle = player.color;
                 ctx.fillStyle = player.backColor;
                 ctx.lineWidth = 3;

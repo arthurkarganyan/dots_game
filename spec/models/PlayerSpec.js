@@ -1,7 +1,7 @@
 import Player from "../../src/models/player";
 
 describe("Player", function () {
-    fit("build", function () {
+    it("build", function () {
         let player = Player.build("red");
         expect(player.colorName).toEqual("red");
         expect(player.color).toEqual("rgba(231, 76, 60, 1.0)");
