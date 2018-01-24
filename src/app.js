@@ -6,21 +6,6 @@ import Player from "./models/player";
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 
-CanvasRenderingContext2D.prototype.fillPolygon = function (pointsArray, fillColor, strokeColor) {
-    if (pointsArray.length <= 0) return;
-    this.moveTo(pointsArray[0][0], pointsArray[0][1]);
-    for (var i = 0; i < pointsArray.length; i++) {
-        this.lineTo(pointsArray[i][0], pointsArray[i][1]);
-    }
-    if (strokeColor != null && strokeColor !== undefined)
-        this.strokeStyle = strokeColor;
-
-    if (fillColor != null && fillColor !== undefined) {
-        this.fillStyle = fillColor;
-        this.fill();
-    }
-};
-
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
@@ -73,17 +58,17 @@ addEventListener('resize', () => {
 // Implementation
 let objects = [];
 const board = new Board(canvas.width, canvas.height, players);
-const mousePoint = new GraphicalPoint(100, 100, currentPlayer.color, 5);
+const mousePoint = new GraphicalPoint(100, 100, currentPlayer.color, 4);
 
 objects.push(board);
 objects.push(mousePoint);
 
 function init() {
-    for (let i = 0; i < 0; i++) {
+    for (let i = 0; i < 5; i++) {
         board.addPlayerPoint(
             ~~(Math.random() * board.xCells),
             ~~(Math.random() * board.yCells),
-            players[1])
+            players[i % 3])
     }
 
     // board.addPlayerPoint(0, 1, currentPlayer);

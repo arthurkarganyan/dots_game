@@ -12,6 +12,10 @@ export default class EscapeAlgorithm {
     isDead(point) {
         let res;
 
+        if (point.x === 0 || point.y === 0 || point.x === this.xCells - 1 || point.y === this.yCells - 1) {
+            return false;
+        }
+
         for (let player of this.playerList.filter((player) => player !== point.player)) {
             if (res = !this._tryFast(point) && !this._trySlow(point, player)) return res;
         }
@@ -43,7 +47,7 @@ export default class EscapeAlgorithm {
                     continue;
                 } else {
                     // TODO possible bug
-                    if (x === 0 || y === 0 || x === this.xCells - 1 || y === this.yCells) {
+                    if (x === 0 || y === 0 || x === this.xCells - 1 || y === this.yCells - 1) {
                         return true;
                     } else {
                         slowEscapeMarkedMap[y][x] = 1;

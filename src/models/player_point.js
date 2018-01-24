@@ -3,7 +3,7 @@ import GraphicalPoint from "./graphical_point";
 export default class PlayerPoint {
     constructor(x, y, gridSize, padding, player) {
         this.player = player;
-        this.graphicalPoint = new GraphicalPoint(padding + x * gridSize, padding + y * gridSize, player.color);
+        this.graphicalPoint = new GraphicalPoint(padding + x * gridSize, padding + y * gridSize, player.color, 5);
         this.x = x;
         this.y = y;
         this.dead = false;

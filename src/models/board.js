@@ -3,12 +3,12 @@ import EscapeAlgorithm from "./escape_algorithm";
 
 export default class Board {
     constructor(width, height, playerList) {
-        this.gridSize = 40;
+        this.gridSize = 30;
         this.padding = 15;
         this.width = width;
         this.height = height;
-        this.color = "#3366cc";
-        this.xCells = this.yCells = 15;
+        this.color = "#c4c4cc";
+        this.xCells = this.yCells = 18;
         this.playerPoints = [];
 
         this.playerPointsMap = new Array(this.yCells);
@@ -48,13 +48,13 @@ export default class Board {
     draw(ctx) {
         ctx.beginPath();
         for (let y = 0; y <= this.yCells; y++) {
-            ctx.moveTo(0.5 + y * this.gridSize + this.padding, this.padding);
-            ctx.lineTo(0.5 + y * this.gridSize + this.padding, this.yCells * (this.gridSize + 0.5));
+            ctx.moveTo((y - 1) * this.gridSize + this.padding, this.padding);
+            ctx.lineTo((y - 1) * this.gridSize + this.padding, (this.yCells - 1) * (this.gridSize) + this.padding);
         }
 
         for (let x = 0; x <= this.xCells; x++) {
-            ctx.moveTo(this.padding, 0.5 + x * this.gridSize + this.padding);
-            ctx.lineTo(this.xCells * (this.gridSize + 0.5), 0.5 + x * this.gridSize + this.padding);
+            ctx.moveTo(this.padding, (x - 1) * this.gridSize + this.padding);
+            ctx.lineTo((this.xCells - 1) * (this.gridSize ) + this.padding, (x - 1) * this.gridSize + this.padding);
         }
 
         ctx.strokeStyle = this.color;
@@ -78,11 +78,11 @@ export default class Board {
     }
 
     maxWidth() {
-        return this.xCells * this.gridSize + this.padding;
+        return (this.xCells - 1) * this.gridSize + this.padding;
     }
 
     maxHeight() {
-        return this.yCells * this.gridSize + this.padding;
+        return (this.yCells - 1) * this.gridSize + this.padding;
     }
 
     toString() {
