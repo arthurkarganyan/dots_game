@@ -35,6 +35,9 @@ const players = [];
 
 players.push(currentPlayer);
 players.push(Player.build("blue"));
+players.push(Player.build("green"));
+
+let playerTurnIndex = 0;
 
 // Event Listeners
 addEventListener('mousemove', event => {
@@ -46,7 +49,12 @@ addEventListener('mousemove', event => {
 
 addEventListener('click', event => {
     if(board.addPlayerPoint(~~(mousePoint.x / board.gridSize), ~~(mousePoint.y / board.gridSize), currentPlayer)) {
-        currentPlayer = players.filter(i => i !== currentPlayer)[0];
+        if(playerTurnIndex === players.length - 1) {
+            playerTurnIndex = 0;
+        } else {
+            playerTurnIndex ++;
+        }
+        currentPlayer = players[playerTurnIndex];
         mousePoint.color = currentPlayer.color;
     }
 
@@ -64,7 +72,7 @@ addEventListener('resize', () => {
 
 // Implementation
 let objects = [];
-const board = new Board(canvas.width, canvas.height);
+const board = new Board(canvas.width, canvas.height, players);
 const mousePoint = new GraphicalPoint(100, 100, currentPlayer.color, 5);
 
 objects.push(board);

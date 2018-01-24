@@ -1,26 +1,31 @@
 import TerritoryBuilder from "./territory_builder";
 
 export default class EscapeAlgorithm {
-    constructor(xCells, yCells, playerPointsMap, areasLayers) {
+    constructor(xCells, yCells, playerPointsMap, areasLayers, playerList) {
         this.yCells = yCells;
         this.xCells = xCells;
         this.playerPointsMap = playerPointsMap;
-        this.territoryBuilder = new TerritoryBuilder(areasLayers, playerPointsMap)
+        this.territoryBuilder = new TerritoryBuilder(areasLayers, playerPointsMap);
+        this.playerList = playerList;
     }
 
     isDead(point) {
-        return !this._tryFast(point) && !this._trySlow(point);
+        let res;
+
+        for (let player of this.playerList.filter((player) => player !== point.player)) {
+            if (res = !this._tryFast(point) && !this._trySlow(point, player)) return res;
+        }
+
+        return res;
     }
 
-    _trySlow(point) {
+    _trySlow(point, player) {
         let toVisit = [[point.x, point.y]];
         let slowEscapeMarkedMap = new Array(this.yCells);
         for (let i = 0; i < this.yCells; i++) {
             slowEscapeMarkedMap[i] = new Array(this.xCells);
         }
         slowEscapeMarkedMap[point.y][point.x] = 1;
-        let player;
-
         while (toVisit.length) { // While there are still squares to visit
             let arr = [
                 [toVisit[0][0] - 1, toVisit[0][1]],
@@ -34,21 +39,17 @@ export default class EscapeAlgorithm {
                 let y;
                 [x, y] = arr[i];
 
-                if (slowEscapeMarkedMap[y][x] || this.playerPointsMap[y][x] && !this.playerPointsMap[y][x].dead && this.playerPointsMap[y][x].player !== point.player) {
-                    if (this.playerPointsMap[y][x] && !this.playerPointsMap[y][x].dead && this.playerPointsMap[y][x].player !== point.player) {
-                        player = this.playerPointsMap[y][x].player
-                    }
+                if (slowEscapeMarkedMap[y][x] || this.playerPointsMap[y][x] && !this.playerPointsMap[y][x].dead && this.playerPointsMap[y][x].player === player) {
                     continue;
                 } else {
-                    toVisit.push([x, y]);
+                    // TODO possible bug
+                    if (x === 0 || y === 0 || x === this.xCells - 1 || y === this.yCells) {
+                        return true;
+                    } else {
+                        slowEscapeMarkedMap[y][x] = 1;
+                        toVisit.push([x, y]);
+                    }
                 }
-
-                // TODO possible bug
-                if (x === 0 || y === 0 || x === this.xCells - 1 || y === this.yCells) {
-                    return true;
-                }
-
-                slowEscapeMarkedMap[y][x] = 1;
             }
 
             toVisit.shift();

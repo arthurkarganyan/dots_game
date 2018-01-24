@@ -2,7 +2,7 @@ import PlayerPoint from "./player_point";
 import EscapeAlgorithm from "./escape_algorithm";
 
 export default class Board {
-    constructor(width, height) {
+    constructor(width, height, playerList) {
         this.gridSize = 40;
         this.padding = 15;
         this.width = width;
@@ -16,6 +16,7 @@ export default class Board {
             this.playerPointsMap[i] = new Array(this.xCells);
         }
         this.areasLayers = {};
+        this.playerList = playerList;
     }
 
     addPlayerPoint(x, y, player) {
@@ -32,13 +33,13 @@ export default class Board {
     }
 
     findDeadPoints(newPoint) {
-        if (new EscapeAlgorithm(this.xCells, this.yCells, this.playerPointsMap, this.areasLayers).isDead(newPoint))
+        if (new EscapeAlgorithm(this.xCells, this.yCells, this.playerPointsMap, this.areasLayers, this.playerList).isDead(newPoint))
             newPoint.dead = true;
 
         for (let i = 0; i < this.playerPoints.length; i++) {
             if (this.playerPoints[i].player === newPoint.player) continue;
             if (this.playerPoints[i].dead) continue;
-            if (new EscapeAlgorithm(this.xCells, this.yCells, this.playerPointsMap, this.areasLayers).isDead(this.playerPoints[i]))
+            if (new EscapeAlgorithm(this.xCells, this.yCells, this.playerPointsMap, this.areasLayers, this.playerList).isDead(this.playerPoints[i]))
                 this.playerPoints[i].dead = true;
         }
     }
@@ -87,7 +88,7 @@ export default class Board {
     toString() {
         let str = "";
 
-        for (let y = 0; y < this.xCells; y++) {
+        for (let y = 0; y < this.yCells; y++) {
             str += '|';
             for (let x = 0; x < this.xCells; x++) {
                 if (this.playerPointsMap[y][x]) {
