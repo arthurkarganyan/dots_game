@@ -1,85 +1,5 @@
-import GraphicalObject from "./graphical_object";
 import PlayerPoint from "./player_point";
-import _ from 'underscore';
-
-class Territory {
-    constructor(player) {
-        this.player = player;
-        this.points = []
-    }
-
-    size() {
-        return this.points.length;
-    }
-
-    forEach(f) {
-        this.points.forEach(f);
-    }
-
-    clone() {
-        let t = new Territory(this.player);
-        t.points = this.points.slice(0);
-        return t;
-    }
-
-    at(index) {
-        return this.points[index];
-    }
-
-    push(point) {
-        return this.points.push(point);
-    }
-
-    containingRect() {
-        if (this.containingRectValue)
-            return this.containingRectValue;
-
-        let minX = 1000;
-        let minY = 1000;
-        let maxX = -1;
-        let maxY = -1;
-
-        this.points.forEach(point => {
-            if (point.x < minX) minX = point.x;
-            if (point.y < minY) minY = point.y;
-            if (point.x > maxX) maxX = point.x;
-            if (point.y > maxY) maxY = point.y;
-        });
-
-        this.containingRectValue = [minX, minY, maxX, maxY];
-        return this.containingRectValue;
-    }
-
-    toString() {
-        return `${this.player.toString()}:${this.containingRect()} (size: ${this.size()})`;
-    }
-
-    coords() {
-        return this.points.map((point) => [point.x, point.y]);
-    }
-
-    firstPoint() {
-        return this.points[0];
-    }
-
-    draw(ctx, gridSize, padding) {
-        ctx.strokeStyle = this.player.color;
-        ctx.fillStyle = this.player.backColor;
-        ctx.lineWidth = 3;
-
-        ctx.beginPath();
-
-        ctx.moveTo(gridSize * this.at(0).x + padding, gridSize * this.at(0).y + padding);
-
-        this.points.slice(1).forEach(i => {
-            ctx.lineTo(gridSize * i.x + padding, gridSize * i.y + padding);
-        });
-
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-    }
-}
+import Territory from "./territory";
 
 export default class Board {
     constructor(width, height) {
@@ -106,7 +26,6 @@ export default class Board {
         this.playerPoints.push(newPoint);
         this.playerPointsMap[y][x] = newPoint;
 
-        // this.calculateCapturedArea(newPoint.x, newPoint.y, newPoint, new Territory(player));
         this.findDeadPoints(newPoint);
 
         return true;
@@ -151,7 +70,6 @@ export default class Board {
                     }
                 }
             }
-
 
         let atCornerCheck = () => {
             if (bug.direction === "down" && !failedEscapeMap[bug.y][bug.x - 1]) return bug.direction = "left";
@@ -240,31 +158,12 @@ export default class Board {
                 slowEscapeMarkedMap[y][x] = 1;
             }
 
-            // let str = "";
-            //
-            // for (let y = 0; y < this.xCells; y++) {
-            //     str += '|';
-            //     for (let x = 0; x < this.xCells; x++) {
-            //         if (slowEscapeMarkedMap[y][x]) {
-            //             str += slowEscapeMarkedMap[y][x];
-            //         } else {
-            //             str += " ";
-            //         }
-            //     }
-            //     str += "|\n";
-            // }
-            //
-            // console.log(str);
-
-
             toVisit.shift();
         }
 
         this.createTerritoryAround(slowEscapeMarkedMap, player);
 
         return false;
-        // let distance = slowEscapeMarkedMap[x2][y2];
-        // return [slowEscapeMarkedMap, distance];
     }
 
     fastEscapeAlgorithm(point) {
@@ -314,85 +213,6 @@ export default class Board {
         }
 
         return escaped;
-    }
-
-    remapArea() {
-        for (let player in this.areasLayers) {
-            for (let i = 0; i < this.areasLayers[player.colorName].length; i++) {
-                let territory = this.areasLayers[player.colorName][i];
-
-                // array.splice(index, 1);
-            }
-        }
-    }
-
-    // Uniqness check
-    addLayer(territory) {
-        let player = territory.player;
-        let playerLayer = this.areasLayers[player.colorName];
-
-        if (playerLayer === undefined) {
-            return this.areasLayers[player.colorName] = [territory];
-        }
-
-        for (let i = 0; i < playerLayer.length; i++) {
-            let a = playerLayer[i].coords().toString();//JSON.stringify(_.sortBy(playerLayer[i].points, (x) => 1000 * x.x + x.y));
-            let b = territory.coords().toString();//JSON.stringify(_.sortBy(territory.points, (x) => 1000 * x.x + x.y));
-
-            if (a === b) {
-                console.log("Filtered!");
-                return;
-            }
-        }
-
-        return playerLayer.push(territory);
-    }
-
-    calculateCapturedArea(x, y, newPoint, territory) {
-        if (x === newPoint.x && y === newPoint.y && territory.size() >= 1 && territory.size() <= 3) {
-            console.log("???");
-            return;
-        }
-
-        let coordinates = [
-            {x: x - 1, y: y - 1},
-            {x: x, y: y - 1},
-            {x: x + 1, y: y - 1},
-            {x: x - 1, y: y},
-            {x: x + 1, y: y},
-            {x: x - 1, y: y + 1},
-            {x: x, y: y + 1},
-            {x: x + 1, y: y + 1}
-        ].filter(point => point.x > -1 && point.x <= this.xCells && point.y > -1 && point.y <= this.yCells &&
-            this.playerPointsMap[point.y][point.x] && this.playerPointsMap[point.y][point.x].player === newPoint.player);
-
-        if (territory.size() >= 3) {
-            coordinates.forEach((i) => {
-                if (i.x === territory.at(0).x && i.y === territory.at(0).y) {
-                    territory.push({x: x, y: y});
-                    console.log(`Found: ${territory.size()}!`);
-                    this.addLayer(territory);
-
-                    return territory;
-                }
-            });
-        }
-
-        territory.forEach(i => {
-            coordinates = coordinates.filter(j => j.x !== i.x || j.y !== i.y)
-        });
-
-        if (coordinates.length === 0) return;
-
-        territory.push({x: x, y: y});
-
-        for (let i = 0; i < coordinates.length; i++) {
-            let a = coordinates[i];
-
-            this.calculateCapturedArea(a.x, a.y, newPoint, territory.clone());
-        }
-
-        return false
     }
 
     draw(ctx) {
