@@ -152,10 +152,6 @@ export default class Board {
                 }
             }
 
-        for (let i = 0; i < this.areasLayers[player.colorName].length; i++) {
-            if (this.areasLayers[player.colorName][i].firstPoint().x === bug.x &&
-                this.areasLayers[player.colorName][i].firstPoint().y === bug.y ) return;
-        }
 
         let atCornerCheck = () => {
             if (bug.direction === "down" && !failedEscapeMap[bug.y][bug.x - 1]) return bug.direction = "left";
@@ -183,8 +179,15 @@ export default class Board {
 
             if (this.playerPointsMap[bug.y][bug.x] && this.playerPointsMap[bug.y][bug.x].player === player &&
                 territory.points.slice(-1)[0] !== this.playerPointsMap[bug.y][bug.x] // uniqueness check
-            )
+            ) {
+                if (territory.size() === 0) {
+                    for (let i = 0; i < this.areasLayers[player.colorName].length; i++) {
+                        if (this.areasLayers[player.colorName][i].firstPoint().x === bug.x &&
+                            this.areasLayers[player.colorName][i].firstPoint().y === bug.y) return;
+                    }
+                }
                 territory.push(this.playerPointsMap[bug.y][bug.x]);
+            }
 
             atCornerCheck();
             obstacleCheck();

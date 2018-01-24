@@ -78,10 +78,10 @@ function init() {
             players[1])
     }
 
-    board.addPlayerPoint(0, 1, currentPlayer);
-    board.addPlayerPoint(1, 0, currentPlayer);
-    board.addPlayerPoint(1, 2, currentPlayer);
-    board.addPlayerPoint(2, 1, currentPlayer);
+    // board.addPlayerPoint(0, 1, currentPlayer);
+    // board.addPlayerPoint(1, 0, currentPlayer);
+    // board.addPlayerPoint(1, 2, currentPlayer);
+    // board.addPlayerPoint(2, 1, currentPlayer);
 
     // for (let i = 0; i < 400; i++) {
     // objects.push();

@@ -183,4 +183,28 @@ describe("Board", function () {
         // expect(Object.values(board.areasLayers).length).toBe(1);
         expect(board.areasLayers[redPlayer.colorName].length).toBe(1);
     });
+
+    it("slowEscapeAlgorithm #4 uniq #2", function () {
+        board.addPlayerPoint(3, 3, redPlayer);
+        massPoints([
+            [3, 2],
+            [2, 3],
+            [3, 4],
+            [4, 3],
+        ], bluePlayer);
+
+        massPoints([
+            [3, 1],
+            [4, 2],
+            [5, 3],
+            [1, 3],
+            [2, 4],
+            [3, 5],
+            [2, 2],
+            [4, 4],
+        ], redPlayer);
+
+        expect(board.areasLayers[redPlayer.colorName].length).toBe(1);
+        // console.log(board.areasLayers[redPlayer.colorName].map((i) => i.firstPoint()))
+    });
 });
