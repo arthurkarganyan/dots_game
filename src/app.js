@@ -3,11 +3,17 @@ import Board from './models/board';
 import Player from "./models/player";
 
 // Initial Setup
-const canvas = document.querySelector('canvas');
-const ctx = canvas.getContext('2d');
+const canvasForeground = document.querySelector('canvas.foreground');
+const ctxForeground = canvasForeground.getContext('2d');
 
-canvas.width = innerWidth;
-canvas.height = innerHeight;
+canvasForeground.width = innerWidth;
+canvasForeground.height = innerHeight;
+
+const canvasBackground = document.querySelector('canvas.background');
+const ctxBackground = canvasBackground.getContext('2d');
+
+canvasBackground.width = innerWidth;
+canvasBackground.height = innerHeight;
 
 // Variables
 const mouse = {
@@ -33,11 +39,11 @@ addEventListener('mousemove', event => {
 });
 
 addEventListener('click', event => {
-    if(board.addPlayerPoint(~~(mousePoint.x / board.gridSize), ~~(mousePoint.y / board.gridSize), currentPlayer)) {
-        if(playerTurnIndex === players.length - 1) {
+    if (board.addPlayerPoint(~~(mousePoint.x / board.gridSize), ~~(mousePoint.y / board.gridSize), currentPlayer)) {
+        if (playerTurnIndex === players.length - 1) {
             playerTurnIndex = 0;
         } else {
-            playerTurnIndex ++;
+            playerTurnIndex++;
         }
         currentPlayer = players[playerTurnIndex];
         mousePoint.color = currentPlayer.color;
@@ -47,29 +53,32 @@ addEventListener('click', event => {
 });
 
 addEventListener('resize', () => {
-    canvas.width = innerWidth;
-    canvas.height = innerHeight;
-    board.height = canvas.height;
-    board.width = canvas.width;
-    // init();
+    canvasForeground.width = innerWidth;
+    canvasForeground.height = innerHeight;
+    canvasBackground.width = innerWidth;
+    canvasBackground.height = innerHeight;
+    board.height = canvasForeground.height;
+    board.width = canvasForeground.width;
+    init();
     animate();
 });
 
 // Implementation
 let objects = [];
-const board = new Board(canvas.width, canvas.height, players);
-const mousePoint = new GraphicalPoint(100, 100, currentPlayer.color, 4);
+const board = new Board(canvasForeground.width, canvasForeground.height, players);
+const mousePoint = new GraphicalPoint(-1, -1, currentPlayer.color, 4);
 
 objects.push(board);
 objects.push(mousePoint);
 
+for (let i = 0; i < 50; i++) {
+    board.addPlayerPoint(
+        ~~(Math.random() * board.xCells),
+        ~~(Math.random() * board.yCells),
+        players[i % 3])
+}
+
 function init() {
-    for (let i = 0; i < 5; i++) {
-        board.addPlayerPoint(
-            ~~(Math.random() * board.xCells),
-            ~~(Math.random() * board.yCells),
-            players[i % 3])
-    }
 
     // board.addPlayerPoint(0, 1, currentPlayer);
     // board.addPlayerPoint(1, 0, currentPlayer);
@@ -79,6 +88,7 @@ function init() {
     // for (let i = 0; i < 400; i++) {
     // objects.push();
     // }
+    board.drawBackground(ctxBackground);
 }
 
 // Animation Loop
@@ -86,13 +96,16 @@ function animate() {
     mousePoint.x = Math.min(Math.round(mouse.x / board.gridSize) * board.gridSize + board.padding, board.maxWidth());
     mousePoint.y = Math.min(Math.round(mouse.y / board.gridSize) * board.gridSize + board.padding, board.maxHeight());
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctxForeground.clearRect(0, 0, canvasForeground.width, canvasForeground.height);
 
     // ctx.fillText('HTML CANVAS BOILERPLATE', mouse.x, mouse.y);
 
     objects.forEach(object => {
-        object.draw(ctx);
+        // board.drawBackground(ctxBackground);
+        object.draw(ctxForeground);
     });
+    // ctxBackground.rect(20,20,150,100);
+    // ctxBackground.stroke();
 }
 
 init();

@@ -4,7 +4,7 @@ import EscapeAlgorithm from "./escape_algorithm";
 export default class Board {
     constructor(width, height, playerList) {
         this.gridSize = 30;
-        this.padding = 15;
+        this.padding = 10;
         this.width = width;
         this.height = height;
         this.color = "#c4c4cc";
@@ -44,22 +44,29 @@ export default class Board {
         }
     }
 
-
-    draw(ctx) {
+    drawBackground(ctx) {
+        let t0 = performance.now();
         ctx.beginPath();
-        for (let y = 0; y <= this.yCells; y++) {
+        for (let y = 1; y <= this.yCells; y++) {
             ctx.moveTo((y - 1) * this.gridSize + this.padding, this.padding);
             ctx.lineTo((y - 1) * this.gridSize + this.padding, (this.yCells - 1) * (this.gridSize) + this.padding);
         }
 
-        for (let x = 0; x <= this.xCells; x++) {
+        for (let x = 1; x <= this.xCells; x++) {
             ctx.moveTo(this.padding, (x - 1) * this.gridSize + this.padding);
-            ctx.lineTo((this.xCells - 1) * (this.gridSize ) + this.padding, (x - 1) * this.gridSize + this.padding);
+            ctx.lineTo((this.xCells - 1) * (this.gridSize) + this.padding, (x - 1) * this.gridSize + this.padding);
         }
-
+        let t1 = performance.now();
         ctx.strokeStyle = this.color;
         ctx.stroke();
         ctx.closePath();
+        console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.");
+
+    }
+
+    draw(ctx) {
+        // this.drawBackground(ctx)
+
 
         for (let playerColor in this.areasLayers) {
             ctx.save();
