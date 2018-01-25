@@ -17,7 +17,6 @@ canvasBackground.width = innerWidth;
 canvasBackground.height = innerHeight;
 
 
-// Variables
 const mouse = {
     x: innerWidth / 2,
     y: innerHeight / 2
@@ -34,7 +33,6 @@ const scoreBoard = new ScoreBoard(document.querySelector('#score'), players);
 
 let playerTurnIndex = 0;
 
-// Event Listeners
 addEventListener('mousemove', event => {
     mouse.x = event.clientX;
     mouse.y = event.clientY;
@@ -43,7 +41,7 @@ addEventListener('mousemove', event => {
 });
 
 addEventListener('click', event => {
-    if (board.addPlayerPoint(~~(mousePoint.x / board.gridSize), ~~(mousePoint.y / board.gridSize), currentPlayer)) {
+    if (board.addPlayerPoint(~~((mousePoint.x - board.padding) / board.gridSize), ~~((mousePoint.y - board.padding) / board.gridSize), currentPlayer)) {
         if (playerTurnIndex === players.length - 1) {
             playerTurnIndex = 0;
         } else {
@@ -64,11 +62,10 @@ addEventListener('resize', () => {
     canvasBackground.height = innerHeight;
     board.height = canvasForeground.height;
     board.width = canvasForeground.width;
-    init();
+    board.drawBackground(ctxBackground);
     animate();
 });
 
-// Implementation
 let objects = [];
 const board = new Board(canvasForeground.width, canvasForeground.height, players);
 const mousePoint = new GraphicalPoint(-1, -1, currentPlayer.color, 4);
@@ -83,39 +80,22 @@ for (let i = 0; i < 50; i++) {
         players[i % 3])
 }
 
-function init() {
-
-    // board.addPlayerPoint(0, 1, currentPlayer);
-    // board.addPlayerPoint(1, 0, currentPlayer);
-    // board.addPlayerPoint(1, 2, currentPlayer);
-    // board.addPlayerPoint(2, 1, currentPlayer);
-
-    // for (let i = 0; i < 400; i++) {
-    // objects.push();
-    // }
-    board.drawBackground(ctxBackground);
-    // scoreBoard.refresh();
-}
-
-// Animation Loop
 function animate() {
-    mousePoint.x = Math.min(Math.round(mouse.x / board.gridSize) * board.gridSize + board.padding, board.maxWidth());
-    mousePoint.y = Math.min(Math.round(mouse.y / board.gridSize) * board.gridSize + board.padding, board.maxHeight());
+    let xP = Math.round((mouse.x - board.padding) / board.gridSize) * board.gridSize + board.padding;
+    mousePoint.x = Math.min(xP, board.maxWidth());
+
+    let yP = Math.round((mouse.y - board.padding) / board.gridSize) * board.gridSize + board.padding;
+    mousePoint.y = Math.min(yP, board.maxHeight());
 
     ctxForeground.clearRect(0, 0, canvasForeground.width, canvasForeground.height);
 
-    // ctx.fillText('HTML CANVAS BOILERPLATE', mouse.x, mouse.y);
-
     objects.forEach(object => {
-        // board.drawBackground(ctxBackground);
         object.draw(ctxForeground);
     });
-    // ctxBackground.rect(20,20,150,100);
-    // ctxBackground.stroke();
 }
 
+board.drawBackground(ctxBackground);
 scoreBoard.build();
-init();
 animate();
 
 
