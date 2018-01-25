@@ -33,6 +33,8 @@ export default class Board {
     }
 
     findDeadPoints(newPoint) {
+        let t0 = performance.now();
+
         if (new EscapeAlgorithm(this.xCells, this.yCells, this.playerPointsMap, this.territories, this.playerList).isDead(newPoint))
             newPoint.dead = true;
 
@@ -41,10 +43,11 @@ export default class Board {
             if (this.playerPoints[i].dead) continue;
             new EscapeAlgorithm(this.xCells, this.yCells, this.playerPointsMap, this.territories, this.playerList).isDead(this.playerPoints[i])
         }
+        let t1 = performance.now();
+        console.log("#findDeadPoints took " + (t1 - t0) + " milliseconds.");
     }
 
     drawBackground(ctx) {
-        let t0 = performance.now();
         ctx.beginPath();
         for (let y = 1; y <= this.yCells; y++) {
             ctx.moveTo((y - 1) * this.gridSize + this.padding, this.padding);
@@ -55,12 +58,9 @@ export default class Board {
             ctx.moveTo(this.padding, (x - 1) * this.gridSize + this.padding);
             ctx.lineTo((this.xCells - 1) * (this.gridSize) + this.padding, (x - 1) * this.gridSize + this.padding);
         }
-        let t1 = performance.now();
         ctx.strokeStyle = this.color;
         ctx.stroke();
         ctx.closePath();
-        console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.");
-
     }
 
     draw(ctx) {
