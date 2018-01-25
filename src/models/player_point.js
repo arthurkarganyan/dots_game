@@ -1,5 +1,7 @@
 import GraphicalPoint from "./graphical_point";
 
+const colors = require('colors');
+
 export default class PlayerPoint {
     constructor(x, y, gridSize, padding, player) {
         this.player = player;
@@ -7,6 +9,11 @@ export default class PlayerPoint {
         this.x = x;
         this.y = y;
         this.dead = false;
+    }
+
+    killedBy(player) {
+        this.dead = true;
+        this.killedBy = player;
     }
 
     color() {
@@ -22,10 +29,10 @@ export default class PlayerPoint {
     }
 
     textRepresentation() {
-        if(this.dead){
-            return this.player.textRepresentationDead;
+        if (this.dead) {
+            return this.player.textRepresentationDead[this.player.colorName];
         } else {
-            return this.player.textRepresentation;
+            return this.player.textRepresentation[this.player.colorName];
         }
     }
 }

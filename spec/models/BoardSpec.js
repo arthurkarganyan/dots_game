@@ -39,6 +39,9 @@ describe("Board", function () {
             expect(board.playerPointsMap[1][1].dead).toBe(false);
             board.addPlayerPoint(2, 1, bluePlayer);
             expect(board.playerPointsMap[1][1].dead).toBe(true);
+
+            expect(bluePlayer.score).toBe(1);
+            expect(redPlayer.score).toBe(0);
         });
 
         it("slowEscapeAlgorithm", function () {
@@ -82,8 +85,8 @@ describe("Board", function () {
             expect(board.playerPointsMap[3][2].dead).toBe(true);
             expect(board.playerPointsMap[3][3].dead).toBe(true);
 
-            expect(board.areasLayers[bluePlayer.colorName][0]).toBeDefined();
-            expect(board.areasLayers[bluePlayer.colorName][0].size()).not.toBe(0);
+            expect(board.territories[bluePlayer.colorName][0]).toBeDefined();
+            expect(board.territories[bluePlayer.colorName][0].size()).not.toBe(0);
 
             let trace = [
                 [3, 1],
@@ -99,11 +102,12 @@ describe("Board", function () {
 
 
             for (let i = 0; i < trace.length; i++) {
-                console.log(board.areasLayers[bluePlayer.colorName][0].coords()[i] + " | " + trace[i]);
+                console.log(board.territories[bluePlayer.colorName][0].coords()[i] + " | " + trace[i]);
             }
 
-            expect(board.areasLayers[bluePlayer.colorName][0].coords()).toHaveSameItems(trace);
-            expect(board.areasLayers[bluePlayer.colorName].length).toBe(1);
+            expect(board.territories[bluePlayer.colorName][0].coords()).toHaveSameItems(trace);
+            expect(board.territories[bluePlayer.colorName].length).toBe(1);
+            expect(bluePlayer.score).toBe(2);
         });
 
         it("slowEscapeAlgorithm #3", function () {
@@ -129,15 +133,15 @@ describe("Board", function () {
             expect(board.playerPointsMap[2][2].dead).toBe(true);
             expect(board.playerPointsMap[3][1].dead).toBe(false);
 
-            expect(board.areasLayers[bluePlayer.colorName][0]).toBeDefined();
-            expect(board.areasLayers[bluePlayer.colorName][0].size()).not.toBe(0);
+            expect(board.territories[bluePlayer.colorName][0]).toBeDefined();
+            expect(board.territories[bluePlayer.colorName][0].size()).not.toBe(0);
 
             for (let i = 0; i < trace.length; i++) {
-                console.log(board.areasLayers[bluePlayer.colorName][0].coords()[i] + " | " + trace[i]);
+                console.log(board.territories[bluePlayer.colorName][0].coords()[i] + " | " + trace[i]);
             }
 
-            expect(board.areasLayers[bluePlayer.colorName][0].coords()).toHaveSameItems(trace);
-            expect(board.areasLayers[bluePlayer.colorName].length).toBe(1);
+            expect(board.territories[bluePlayer.colorName][0].coords()).toHaveSameItems(trace);
+            expect(board.territories[bluePlayer.colorName].length).toBe(1);
         });
 
         it("slowEscapeAlgorithm #4", function () {
@@ -157,8 +161,8 @@ describe("Board", function () {
             board.addPlayerPoint(2, 2, bluePlayer);
             expect(board.playerPointsMap[2][2].dead).toBe(true);
             expect(board.playerPointsMap[2][3].dead).toBe(false);
-            expect(Object.values(board.areasLayers).length).toBe(1);
-            expect(board.areasLayers[redPlayer.colorName].length).toBe(1);
+            expect(Object.values(board.territories).length).toBe(1);
+            expect(board.territories[redPlayer.colorName].length).toBe(1);
         });
 
         it("slowEscapeAlgorithm #4 uniq", function () {
@@ -184,8 +188,11 @@ describe("Board", function () {
 
             board.addPlayerPoint(3, 5, redPlayer);
             board.addPlayerPoint(2, 2, redPlayer);
-            // expect(Object.values(board.areasLayers).length).toBe(1);
-            expect(board.areasLayers[redPlayer.colorName].length).toBe(1);
+            // expect(Object.values(board.territories).length).toBe(1);
+            expect(board.territories[redPlayer.colorName].length).toBe(1);
+
+            expect(bluePlayer.score).toBe(1);
+            expect(redPlayer.score).toBe(5);
         });
 
         it("slowEscapeAlgorithm #4 uniq #2", function () {
@@ -208,8 +215,8 @@ describe("Board", function () {
                 [4, 4],
             ], redPlayer);
 
-            expect(board.areasLayers[redPlayer.colorName].length).toBe(1);
-            // console.log(board.areasLayers[redPlayer.colorName].map((i) => i.firstPoint()))
+            expect(board.territories[redPlayer.colorName].length).toBe(1);
+            // console.log(board.territories[redPlayer.colorName].map((i) => i.firstPoint()))
         });
     });
 
@@ -242,8 +249,8 @@ describe("Board", function () {
             expect(board.playerPointsMap[2][2].dead).toBe(true);
             expect(board.playerPointsMap[2][3].dead).toBe(true);
 
-            // expect(board.areasLayers[redPlayer.colorName].length).toBe(1);
-            // console.log(board.areasLayers[redPlayer.colorName].map((i) => i.firstPoint()))
+            // expect(board.territories[redPlayer.colorName].length).toBe(1);
+            // console.log(board.territories[redPlayer.colorName].map((i) => i.firstPoint()))
         });
     })
 });

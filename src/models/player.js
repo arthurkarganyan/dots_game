@@ -83,5 +83,6 @@ export default class Player {
         this.colorName = colorName;
         this.textRepresentation = textRepresentation;
         this.textRepresentationDead = textRepresentationDead;
+        this.score = 0;
     }
 }

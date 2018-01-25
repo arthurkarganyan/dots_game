@@ -1,11 +1,11 @@
 import TerritoryBuilder from "./territory_builder";
 
 export default class EscapeAlgorithm {
-    constructor(xCells, yCells, playerPointsMap, areasLayers, playerList) {
+    constructor(xCells, yCells, playerPointsMap, territories, playerList) {
         this.yCells = yCells;
         this.xCells = xCells;
         this.playerPointsMap = playerPointsMap;
-        this.territoryBuilder = new TerritoryBuilder(areasLayers, playerPointsMap);
+        this.territoryBuilder = new TerritoryBuilder(territories, playerPointsMap);
         this.playerList = playerList;
     }
 
@@ -17,7 +17,11 @@ export default class EscapeAlgorithm {
         }
 
         for (let player of this.playerList.filter((player) => player !== point.player)) {
-            if (res = !this._tryFast(point) && !this._trySlow(point, player)) return res;
+            if (res = !this._tryFast(point) && !this._trySlow(point, player)) {
+                player.score++;
+                point.killedBy(player);
+                return res;
+            }
         }
 
         return res;

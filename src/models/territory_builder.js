@@ -2,13 +2,13 @@
 import Territory from "./territory";
 
 export default class TerritoryBuilder {
-    constructor(areasLayers, playerPointsMap) {
-        this.areasLayers = areasLayers;
+    constructor(territories, playerPointsMap) {
+        this.territories = territories;
         this.playerPointsMap = playerPointsMap;
     }
 
     createTerritoryAround(failedEscapeMap, player) {
-        if (!this.areasLayers[player.colorName]) this.areasLayers[player.colorName] = [];
+        if (!this.territories[player.colorName]) this.territories[player.colorName] = [];
 
         let territory = new Territory(player);
         let bug = {xStart: -1, yStart: -1, x: -1, y: -1, direction: "right"};
@@ -53,9 +53,9 @@ export default class TerritoryBuilder {
                 territory.points.slice(-1)[0] !== this.playerPointsMap[bug.y][bug.x] // uniqueness check
             ) {
                 if (territory.size() === 0) {
-                    for (let i = 0; i < this.areasLayers[player.colorName].length; i++) {
-                        if (this.areasLayers[player.colorName][i].firstPoint().x === bug.x &&
-                            this.areasLayers[player.colorName][i].firstPoint().y === bug.y) return;
+                    for (let i = 0; i < this.territories[player.colorName].length; i++) {
+                        if (this.territories[player.colorName][i].firstPoint().x === bug.x &&
+                            this.territories[player.colorName][i].firstPoint().y === bug.y) return;
                     }
                 }
                 territory.push(this.playerPointsMap[bug.y][bug.x]);
@@ -68,6 +68,6 @@ export default class TerritoryBuilder {
 
         territory.push(this.playerPointsMap[bug.yStart][bug.xStart]);
 
-        this.areasLayers[player.colorName].push(territory);
+        this.territories[player.colorName].push(territory);
     }
 }

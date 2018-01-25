@@ -15,7 +15,7 @@ export default class Board {
         for (let i = 0; i < this.yCells; i++) {
             this.playerPointsMap[i] = new Array(this.xCells);
         }
-        this.areasLayers = {};
+        this.territories = {};
         this.playerList = playerList;
     }
 
@@ -33,14 +33,13 @@ export default class Board {
     }
 
     findDeadPoints(newPoint) {
-        if (new EscapeAlgorithm(this.xCells, this.yCells, this.playerPointsMap, this.areasLayers, this.playerList).isDead(newPoint))
+        if (new EscapeAlgorithm(this.xCells, this.yCells, this.playerPointsMap, this.territories, this.playerList).isDead(newPoint))
             newPoint.dead = true;
 
         for (let i = 0; i < this.playerPoints.length; i++) {
             if (this.playerPoints[i].player === newPoint.player) continue;
             if (this.playerPoints[i].dead) continue;
-            if (new EscapeAlgorithm(this.xCells, this.yCells, this.playerPointsMap, this.areasLayers, this.playerList).isDead(this.playerPoints[i]))
-                this.playerPoints[i].dead = true;
+            new EscapeAlgorithm(this.xCells, this.yCells, this.playerPointsMap, this.territories, this.playerList).isDead(this.playerPoints[i])
         }
     }
 
@@ -65,12 +64,9 @@ export default class Board {
     }
 
     draw(ctx) {
-        // this.drawBackground(ctx)
-
-
-        for (let playerColor in this.areasLayers) {
+        for (let playerColor in this.territories) {
             ctx.save();
-            this.areasLayers[playerColor].forEach(territory => {
+            this.territories[playerColor].forEach(territory => {
                 territory.draw(ctx, this.gridSize, this.padding)
             });
             ctx.restore();
