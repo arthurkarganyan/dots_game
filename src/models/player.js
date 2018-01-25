@@ -19,12 +19,12 @@ export default class Player {
 
     static presets() {
         return {
-            aquamarine: {
-                color: "rgba(26, 188, 156, 1.0)",
-                backColor: "rgba(26, 188, 156, 0.5)",
-                textRepresentation: 'A',
-                textRepresentationDead: 'a',
-            },
+            // pink: {
+            //     color: "rgba(232, 67, 147, 1.0)",
+            //     backColor: "rgba(232, 67, 147, 1.0)",
+            //     textRepresentation: 'P',
+            //     textRepresentationDead: 'p',
+            // },
 
             green: {
                 color: "rgba(46, 204, 113, 1.0)",

@@ -73,10 +73,10 @@ objects.push(board);
 objects.push(mousePoint);
 
 for (let i = 0; i < 50; i++) {
-    board.addPlayerPoint(
-        ~~(Math.random() * board.xCells),
-        ~~(Math.random() * board.yCells),
-        players[i % 3])
+    if (!board.addPlayerPoint(
+            ~~(Math.random() * board.xCells),
+            ~~(Math.random() * board.yCells),
+            players[i % players.length])) i--;
 }
 
 function animate() {
