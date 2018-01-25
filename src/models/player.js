@@ -85,4 +85,8 @@ export default class Player {
         this.textRepresentationDead = textRepresentationDead;
         this.score = 0;
     }
+
+    setScore(score) {
+        this.score = score;
+    }
 }

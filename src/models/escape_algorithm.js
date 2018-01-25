@@ -18,7 +18,7 @@ export default class EscapeAlgorithm {
 
         for (let player of this.playerList.filter((player) => player !== point.player)) {
             if (res = !this._tryFast(point) && !this._trySlow(point, player)) {
-                player.score++;
+                player.setScore(player.score + 1);
                 point.killedBy(player);
                 return res;
             }

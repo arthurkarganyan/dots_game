@@ -1,6 +1,7 @@
 import GraphicalPoint from './models/graphical_point';
 import Board from './models/board';
 import Player from "./models/player";
+import ScoreBoard from "./models/score_board";
 
 // Initial Setup
 const canvasForeground = document.querySelector('canvas.foreground');
@@ -15,6 +16,7 @@ const ctxBackground = canvasBackground.getContext('2d');
 canvasBackground.width = innerWidth;
 canvasBackground.height = innerHeight;
 
+
 // Variables
 const mouse = {
     x: innerWidth / 2,
@@ -27,6 +29,8 @@ const players = [];
 players.push(currentPlayer);
 players.push(Player.build("blue"));
 players.push(Player.build("green"));
+
+const scoreBoard = new ScoreBoard(document.querySelector('#score'), players);
 
 let playerTurnIndex = 0;
 
@@ -47,6 +51,7 @@ addEventListener('click', event => {
         }
         currentPlayer = players[playerTurnIndex];
         mousePoint.color = currentPlayer.color;
+        scoreBoard.refresh();
     }
 
     animate();
@@ -89,6 +94,7 @@ function init() {
     // objects.push();
     // }
     board.drawBackground(ctxBackground);
+    // scoreBoard.refresh();
 }
 
 // Animation Loop
@@ -108,6 +114,7 @@ function animate() {
     // ctxBackground.stroke();
 }
 
+scoreBoard.build();
 init();
 animate();
 
