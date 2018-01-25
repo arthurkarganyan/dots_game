@@ -3,7 +3,6 @@ import Board from './models/board';
 import Player from "./models/player";
 import ScoreBoard from "./models/score_board";
 
-// Initial Setup
 const canvasForeground = document.querySelector('canvas.foreground');
 const ctxForeground = canvasForeground.getContext('2d');
 

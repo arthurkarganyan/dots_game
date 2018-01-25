@@ -64,6 +64,10 @@ export default class Board {
     }
 
     draw(ctx) {
+        this.playerPoints.forEach(i => {
+            if (i.dead) i.draw(ctx)
+        });
+        
         for (let playerColor in this.territories) {
             ctx.save();
             this.territories[playerColor].forEach(territory => {
@@ -72,9 +76,6 @@ export default class Board {
             ctx.restore();
         }
 
-        this.playerPoints.forEach(i => {
-            if (i.dead) i.draw(ctx)
-        });
         this.playerPoints.forEach(i => {
             if (!i.dead) i.draw(ctx)
         });
