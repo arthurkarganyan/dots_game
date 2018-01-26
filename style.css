@@ -1,0 +1,38 @@
+body {
+    font-family: "Futura", "Helvetica Neue", Helvetica, sans-serif;
+}
+canvas {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+canvas.foreground {
+    /*display: none;*/
+    /*background: #f15261;*/
+}
+
+body {
+    margin: 0;
+}
+
+#score {
+    position: absolute;
+    left: 550px;
+    top: 10px;
+}
+
+#score table td, #score table th {
+    border: 2px #e1e1e5 solid;
+    text-align: center;
+    padding: 8px;
+}
+
+#score table {
+    border-collapse: collapse;
+}
+
+.circle:before {
+    content: ' \25CF';
+    font-size: 25px;
+}
