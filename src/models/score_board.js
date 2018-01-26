@@ -15,7 +15,7 @@ export default class ScoreBoard {
             let tr = document.createElement("tr");
 
             tr.appendChild(this._createTd("", "circle", "color: " + player.color));
-            tr.appendChild(this._createTd(player.colorName));
+            tr.appendChild(this._createTd(player.name));
 
             player.scoreElement = this._createTd(player.score);
             tr.appendChild(player.scoreElement);

@@ -77,13 +77,14 @@ export default class Player {
         };
     }
 
-    constructor(colorName, color, backColor, textRepresentation, textRepresentationDead) {
+    constructor(colorName, color, backColor, textRepresentation, textRepresentationDead, name) {
         this.color = color;
         this.backColor = backColor;
         this.colorName = colorName;
         this.textRepresentation = textRepresentation;
         this.textRepresentationDead = textRepresentationDead;
         this.score = 0;
+        this.name = (name || "Player") + " " + colorName;
     }
 
     setScore(score) {
