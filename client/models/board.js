@@ -39,8 +39,11 @@ export default class Board {
 
         this._incPointsCount();
 
-        if(document)
+        // FIXME
+        try {
             document.querySelector("#territory #percent").innerText = Math.round(this.getTerritoryOccupied() * 100) + "%";
+        } catch (e) {
+        }
 
         return true;
     }
@@ -48,14 +51,6 @@ export default class Board {
     findDeadPoints(newPoint) {
         if (new EscapeAlgorithm(this.xCells, this.yCells, this.pointsMap, this.territories, this.playerList).isDead(newPoint))
             newPoint.dead = true;
-
-        if ((newPoint.x === 0 || !this.pointsMap[newPoint.y][newPoint.x - 1]) &&
-            (newPoint.y === 0 || !this.pointsMap[newPoint.y - 1][newPoint.x]) &&
-            (newPoint.x === this.xCells - 1 || !this.pointsMap[newPoint.y][newPoint.x + 1]) &&
-            (newPoint.y === this.yCells - 1 || !this.pointsMap[newPoint.y + 1][newPoint.x])
-        ) {
-            return;
-        }
 
         for (let i = 0; i < this.getPlayerPoints().length; i++) {
             if (this.getPlayerPoints()[i].player === newPoint.player) continue;

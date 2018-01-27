@@ -59,7 +59,7 @@ describe("Board", function () {
             expect(board.pointsMap[1][1].dead).toBe(false);
         });
 
-        fit("slowEscapeAlgorithm #2", function () {
+        it("slowEscapeAlgorithm #2", function () {
             board.addPlayerPoint(2, 3, redPlayer);
             board.addPlayerPoint(3, 3, redPlayer);
             expect(board.pointsMap[3][2]).toBeDefined();
