@@ -69,6 +69,14 @@ addEventListener('touchstart', event => {
     }
 });
 
+let prog = document.querySelector(".progress");
+let terr = () => {
+    prog.innerHTML = "";
+    players.forEach(i => {
+        prog.innerHTML += "<div class='progress-bar' role='progressbar' style='width: " + 100 * (i.territoryOccupied() / (board.yCells * board.xCells)) + "%; background-color:" + i.color + "' aria-valuenow='15' aria-valuemin='0' aria-valuemax='100'></div>"
+    });
+};
+
 let t = (x, y) => {
     if (board.addPlayerPoint(x, y, currentPlayer)) {
         if (playerTurnIndex === players.length - 1) {
@@ -83,6 +91,7 @@ let t = (x, y) => {
         let msg = JSON.stringify({"x": x, "y": y, "player": currentPlayer.getName()});
         ws.send(msg);
         animate();
+        terr();
     }
 };
 
@@ -206,8 +215,5 @@ window.onload = function () {
     });
 };
 
-let prog = document.querySelector(".progress");
-players.forEach(i => {
-    prog.innerHTML += "<div class='progress-bar' role='progressbar' style='width: 15%; background-color:" + i.color + "' aria-valuenow='15' aria-valuemin='0' aria-valuemax='100'></div>"
-});
 
+terr();

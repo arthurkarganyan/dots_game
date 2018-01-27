@@ -85,6 +85,12 @@ export default class Player {
         this.textRepresentationDead = textRepresentationDead;
         this.score = 0;
         this.name = (name || "Player") + " " + colorName;
+        this.emptyTerritoryOccupied = 0;
+        this.livePointsCount = 0;
+    }
+
+    territoryOccupied() {
+        return this.emptyTerritoryOccupied + this.livePointsCount;
     }
 
     getName() {

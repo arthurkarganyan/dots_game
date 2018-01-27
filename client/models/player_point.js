@@ -14,6 +14,8 @@ export default class PlayerPoint {
     killedBy(player) {
         this.dead = true;
         this.killedBy = player;
+
+        this.player.livePointsCount--;
     }
 
     color() {

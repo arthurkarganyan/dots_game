@@ -45,6 +45,8 @@ export default class Board {
         } catch (e) {
         }
 
+        player.livePointsCount++;
+
         return true;
     }
 

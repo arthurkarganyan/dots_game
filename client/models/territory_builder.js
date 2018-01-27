@@ -68,6 +68,7 @@ export default class TerritoryBuilder {
 
         territory.push(this.pointsMap[bug.yStart][bug.xStart]);
 
+        player.emptyTerritoryOccupied += innerSize;
         this.territories[player.colorName].push(territory);
     }
 }

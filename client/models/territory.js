@@ -5,7 +5,7 @@ export default class Territory {
 
         let _player = player;
         this.getPlayer = function() { return _player; };
-        this.getInnerSize = function() { return innerSize; }
+        this.getInnerSize = function() { return innerSize; };
     }
 
     size() {
