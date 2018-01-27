@@ -38,7 +38,7 @@ if (p === 'iPad' || p === 'iPhone' || p === 'iPod') {
     iOS = true;
     let el = document.querySelector("#mobile_help");
     el.style.display = 'block';
-    el.addEventListener('click',  e => {
+    el.addEventListener('click', e => {
         touchClick(e);
     })
 }
@@ -50,7 +50,7 @@ addEventListener('mousemove', event => {
     let clientX = event.clientX;
     let clientY = event.clientY;
 
-    if (clientX < board.maxWidth() && clientY < board.maxHeight()) {
+    if (clientX < board.maxWidth() + board.gridSize && clientY < board.maxHeight() + board.gridSize) {
         mouse.x = clientX;
         mouse.y = clientY;
         animate();
@@ -205,4 +205,9 @@ window.onload = function () {
         })
     });
 };
+
+let prog = document.querySelector(".progress");
+players.forEach(i => {
+    prog.innerHTML += "<div class='progress-bar' role='progressbar' style='width: 15%; background-color:" + i.color + "' aria-valuenow='15' aria-valuemin='0' aria-valuemax='100'></div>"
+});
 
