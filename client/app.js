@@ -40,7 +40,9 @@ addEventListener('mousemove', event => {
 });
 
 addEventListener('click', event => {
-    if (board.addPlayerPoint(~~((mousePoint.x - board.padding) / board.gridSize), ~~((mousePoint.y - board.padding) / board.gridSize), currentPlayer)) {
+    let xCoord = ~~((mousePoint.x - board.padding) / board.gridSize);
+    let yCoord = ~~((mousePoint.y - board.padding) / board.gridSize);
+    if (board.addPlayerPoint(xCoord, yCoord, currentPlayer)) {
         if (playerTurnIndex === players.length - 1) {
             playerTurnIndex = 0;
         } else {
@@ -50,7 +52,8 @@ addEventListener('click', event => {
         mousePoint.color = currentPlayer.color;
         scoreBoard.refresh();
 
-        ws.send(mousePoint.x + "," + mousePoint.y);
+        let msg = JSON.stringify({"x": xCoord, "y": yCoord, "player": currentPlayer.getName()})
+        ws.send(msg);
     }
 
     animate();
@@ -103,17 +106,54 @@ animate();
 
 let url = 'ws://localhost:8080';
 let ws = new WebSocket(url);
-ws.onopen = function(evt) {
+ws.onopen = function (evt) {
+    ws.send("START!");
 };
-ws.onmessage = function(evt) {
+ws.onmessage = function (evt) {
     // handle this message
     console.log(evt.data);
 };
-ws.onclose = function(evt) {
+ws.onclose = function (evt) {
     console.log("Connection Closed")
 };
-ws.onerror = function(evt) {
+ws.onerror = function (evt) {
     console.log("Error occured")
     // handle this error
 };
 
+window.onload = function () {
+    let modal = new RModal(document.getElementById('modal'), {
+        //content: 'Abracadabra'
+        beforeOpen: function (next) {
+            next();
+        }
+        , afterOpen: function () {
+        }
+
+        , beforeClose: function (next) {
+            next();
+        }
+        , afterClose: function () {
+        }
+        // , bodyClass: 'modal-open'
+        // , dialogClass: 'modal-dialog'
+        // , dialogOpenClass: 'animated fadeIn'
+        // , dialogCloseClass: 'animated fadeOut'
+
+        // , focus: true
+        // , focusElements: ['input.form-control', 'textarea', 'button.btn-primary']
+
+        // , escapeClose: true
+    });
+
+    document.addEventListener('keydown', function (ev) {
+        modal.keydown(ev);
+    }, false);
+
+    // document.getElementById('showModal').addEventListener("click", function (ev) {
+    //     ev.preventDefault();
+    modal.open();
+    // }, false);
+
+    window.modal = modal;
+};

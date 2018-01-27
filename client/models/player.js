@@ -87,6 +87,11 @@ export default class Player {
         this.name = (name || "Player") + " " + colorName;
     }
 
+    getName() {
+        return this.name;
+    }
+
+
     setScore(score) {
         this.score = score;
     }

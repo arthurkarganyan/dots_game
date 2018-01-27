@@ -44,3 +44,7 @@ app.use('/static', express.static(__root + '/public'));
 
 
 app.listen(3000, () => console.log('listening on port 3000!'));
+
+process.on('uncaughtException', function (err) {
+    console.log('UNCAUGHT EXCEPTION - keeping process alive:',  err);
+});
