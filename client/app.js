@@ -32,17 +32,45 @@ const scoreBoard = new ScoreBoard(document.querySelector('#score'), players);
 
 let playerTurnIndex = 0;
 
-addEventListener('mousemove', event => {
-    mouse.x = event.clientX;
-    mouse.y = event.clientY;
+let iOS = false;
+let p = navigator.platform;
+if (p === 'iPad' || p === 'iPhone' || p === 'iPod') {
+    iOS = true;
+    let el = document.querySelector("#mobile_help");
+    el.style.display = 'block';
+    el.addEventListener('click',  e => {
+        touchClick(e);
+    })
+}
+// if (iOS === false) {
+//     // $("input[type=button]").hide();
+// }
 
-    animate();
+addEventListener('mousemove', event => {
+    let clientX = event.clientX;
+    let clientY = event.clientY;
+
+    if (clientX < board.maxWidth() && clientY < board.maxHeight()) {
+        mouse.x = clientX;
+        mouse.y = clientY;
+        animate();
+    }
 });
 
-addEventListener('click', event => {
-    let xCoord = ~~((mousePoint.x - board.padding) / board.gridSize);
-    let yCoord = ~~((mousePoint.y - board.padding) / board.gridSize);
-    if (board.addPlayerPoint(xCoord, yCoord, currentPlayer)) {
+addEventListener('touchstart', event => {
+    let clientX = event.touches[0].clientX;
+    let clientY = event.touches[0].clientY;
+
+    // ws.send(clientX + "," + board.maxWidth());
+    if (clientX < board.maxWidth() && clientY < board.maxHeight()) {
+        mouse.x = clientX;
+        mouse.y = clientY;
+        animate();
+    }
+});
+
+let t = (x, y) => {
+    if (board.addPlayerPoint(x, y, currentPlayer)) {
         if (playerTurnIndex === players.length - 1) {
             playerTurnIndex = 0;
         } else {
@@ -52,12 +80,23 @@ addEventListener('click', event => {
         mousePoint.color = currentPlayer.color;
         scoreBoard.refresh();
 
-        let msg = JSON.stringify({"x": xCoord, "y": yCoord, "player": currentPlayer.getName()})
+        let msg = JSON.stringify({"x": x, "y": y, "player": currentPlayer.getName()});
         ws.send(msg);
+        animate();
     }
+};
 
-    animate();
-});
+let touchClick = event => {
+    // ws.send(JSON.stringify(event));
+    let xCoord = ~~((mousePoint.x - board.padding) / board.gridSize);
+    let yCoord = ~~((mousePoint.y - board.padding) / board.gridSize);
+    // alert(xCoord + ',' + yCoord);
+
+    t(xCoord, yCoord);
+};
+
+// addEventListener("touchend", touchClick);
+addEventListener('click', touchClick);
 
 addEventListener('resize', () => {
     canvasForeground.width = innerWidth;
@@ -152,8 +191,18 @@ window.onload = function () {
 
     // document.getElementById('showModal').addEventListener("click", function (ev) {
     //     ev.preventDefault();
-    modal.open();
+    // modal.open();
     // }, false);
 
     window.modal = modal;
+
+    let btns = document.querySelectorAll(".btn-group-toggle .btn");
+    btns.forEach((btn) => {
+        btn.addEventListener('click', event => {
+            btns.forEach(i => i.classList.remove("active"));
+
+            btn.classList.add("active");
+        })
+    });
 };
+

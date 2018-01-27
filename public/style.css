@@ -48,3 +48,10 @@ table {
     content: ' \25CF';
     font-size: 25px;
 }
+
+#mobile_help .btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    font-size: 24px;
+}

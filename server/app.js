@@ -34,7 +34,7 @@ server.listen(8080, function listening() {
     console.log('Listening on %d', server.address().port);
 });
 
-app.use('/static', express.static(__root + '/public'));
+app.use('/', express.static(__root + '/public'));
 
 // app.get('/', (req, res) => {
 //     // console.log(__dirname+'/sitemap.html');

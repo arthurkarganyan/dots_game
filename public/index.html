@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://unpkg.com/animate.css@3.5.2/animate.css" type="text/css"/>
     <link rel="stylesheet" href="https://unpkg.com/rmodal@1.0.28/dist/rmodal.css" type="text/css"/>
     <script type="text/javascript" src="https://unpkg.com/rmodal@1.0.26/dist/rmodal.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 </head>
 <body>
 <canvas class="background"></canvas>
@@ -38,6 +39,11 @@
             </tr>
             </tbody>
         </table>
+
+    </div>
+    <div id="mobile_help" style="display: none">
+        <!--<hr>-->
+        <button class="btn btn-primary " type="submit">+ Add Point</button>
     </div>
 
     <div id="modal" class="modal">
@@ -45,21 +51,34 @@
             <div class="modal-content">
                 <form class="form-horizontal" method="get">
                     <div class="modal-header">
-                        <strong>Yep, I'm a dialog...</strong>
+                        <strong>Yep, let's Play...</strong>
                     </div>
 
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="dummyText" class="control-label col-xs-4">Dummy text</label>
+                            <label for="playerName" class="control-label col-xs-4">Your nickname?</label>
                             <div class="input-group col-xs-7">
-                                <input type="text" name="dummyText" id="dummyText" class="form-control"/>
+                                <input type="text" name="playerName" id="playerName" class="form-control"/>
                             </div>
+                        </div>
+
+                        <h6>Game mode:</h6>
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-primary active">
+                                <input type="radio" name="options" id="option1" autocomplete="off"> 2 players
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" name="options" id="option2" autocomplete="off"> 4 players
+                            </label>
+                            <!--<label class="btn btn-primary">-->
+                            <!--<input type="radio" name="options" id="option3" autocomplete="off"> Radio-->
+                            <!--</label>-->
                         </div>
                     </div>
 
                     <div class="modal-footer">
-                        <button class="btn btn-default" type="button" onclick="modal.close();">Cancel</button>
-                        <button class="btn btn-primary" type="submit" onclick="modal.close();">Save</button>
+                        <!--<button class="btn btn-default" type="button" onclick="modal.close();">Cancel</button>-->
+                        <button class="btn btn-primary" type="submit" onclick="modal.close();">Start</button>
                     </div>
                 </form>
             </div>
