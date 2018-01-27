@@ -1,9 +1,7 @@
 // const express = require('express');
 // const app = express();
 //
-// app.get('/', (req, res) => res.send('Hello World!'));
 //
-// app.listen(3000, () => console.log('Example app listening on port 3000!'));
 
 const express = require('express');
 const http = require('http');
@@ -11,13 +9,14 @@ const url = require('url');
 const WebSocket = require('ws');
 
 const app = express();
+const __root = __dirname.split('/').slice(0, -1).join('/');
 
-app.use(function (req, res) {
-    res.send({ msg: "hello" });
-});
+// app.use(function (req, res) {
+//     res.send({ msg: "hello" });
+// });
 
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
+const wss = new WebSocket.Server({server});
 
 wss.on('connection', function connection(ws, req) {
     const location = url.parse(req.url, true);
@@ -34,3 +33,14 @@ wss.on('connection', function connection(ws, req) {
 server.listen(8080, function listening() {
     console.log('Listening on %d', server.address().port);
 });
+
+app.use('/static', express.static(__root + '/public'));
+
+// app.get('/', (req, res) => {
+//     // console.log(__dirname+'/sitemap.html');
+//     // res.send('Hello World!')
+//     return res.sendFile('../index.html');
+// });
+
+
+app.listen(3000, () => console.log('listening on port 3000!'));

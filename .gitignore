@@ -2,6 +2,7 @@
 doc/*
 node_modules/*
 dist/*
+public/dist/*
 
 # Ignore all logfiles and tempfiles.
 /log/*.log

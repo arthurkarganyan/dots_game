@@ -4,7 +4,7 @@ module.exports = {
     entry: './client/app.js',
     output: {
         filename: 'build.js',
-        path: path.resolve(__dirname, 'dist')
+        path: path.resolve(__dirname, 'public/dist')
     },
     module: {
         rules: [

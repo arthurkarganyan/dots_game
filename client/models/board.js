@@ -21,10 +21,9 @@ export default class Board {
         this.playerList = playerList;
 
         let pointsCount = 0;
-        this.getPointsCount = () => pointsCount;
-        this.incPointsCount = () => pointsCount++;
+        this._incPointsCount = () => pointsCount++;
         this.getTerritoryOccupied = () => {
-            return (pointsCount / (this.xCells * this.yCells))
+            return pointsCount / (this.xCells * this.yCells);
         };
     }
 
@@ -38,7 +37,7 @@ export default class Board {
 
         this.findDeadPoints(newPoint);
 
-        this.incPointsCount();
+        this._incPointsCount();
 
         document.querySelector("#territory #percent").innerText = Math.round(this.getTerritoryOccupied() * 100) + "%";
 

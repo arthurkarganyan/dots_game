@@ -49,6 +49,8 @@ addEventListener('click', event => {
         currentPlayer = players[playerTurnIndex];
         mousePoint.color = currentPlayer.color;
         scoreBoard.refresh();
+
+        ws.send(mousePoint.x + "," + mousePoint.y);
     }
 
     animate();
@@ -99,20 +101,19 @@ board.drawBackground(ctxBackground);
 scoreBoard.build();
 animate();
 
-// let url = 'http://localhost:8080';
-// let ws = new WebSocket(url);
-// let msg = "hi, this is simple message.";
-// ws.onopen = function(evt) {
-//     ws.send(msg);
-// };
-// ws.onmessage = function(evt) {
-//     // handle this message
-//     console.log(evt.data);
-// };
-// ws.onclose = function(evt) {
-//     // this channel is closed
-// };
-// ws.onerror = function(evt) {
-//     // handle this error
-// };
+let url = 'ws://localhost:8080';
+let ws = new WebSocket(url);
+ws.onopen = function(evt) {
+};
+ws.onmessage = function(evt) {
+    // handle this message
+    console.log(evt.data);
+};
+ws.onclose = function(evt) {
+    console.log("Connection Closed")
+};
+ws.onerror = function(evt) {
+    console.log("Error occured")
+    // handle this error
+};
 
