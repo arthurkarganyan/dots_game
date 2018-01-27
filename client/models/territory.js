@@ -1,7 +1,10 @@
 export default class Territory {
     constructor(player) {
-        this.player = player;
-        this.points = []
+        // this.getPlayer() = player;
+        this.points = [];
+
+        let _player = player;
+        this.getPlayer = function() { return _player; }
     }
 
     size() {
@@ -13,7 +16,7 @@ export default class Territory {
     }
 
     clone() {
-        let t = new Territory(this.player);
+        let t = new Territory(this.getPlayer());
         t.points = this.points.slice(0);
         return t;
     }
@@ -27,7 +30,7 @@ export default class Territory {
     }
 
     toString() {
-        return `${this.player.toString()}: (size: ${this.size()})`;
+        return `${this.getPlayer().toString()}: (size: ${this.size()})`;
     }
 
     coords() {
@@ -39,8 +42,8 @@ export default class Territory {
     }
 
     draw(ctx, gridSize, padding) {
-        ctx.strokeStyle = this.player.color;
-        ctx.fillStyle = this.player.backColor;
+        ctx.strokeStyle = this.getPlayer().color;
+        ctx.fillStyle = this.getPlayer().backColor;
         ctx.lineWidth = 3;
 
         ctx.beginPath();

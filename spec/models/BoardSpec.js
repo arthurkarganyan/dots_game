@@ -1,5 +1,5 @@
-import Board from "../../src/models/board";
-import Player from "../../src/models/player";
+import Board from "../../client/models/board";
+import Player from "../../client/models/player";
 
 require('jasmine-collection-matchers');
 

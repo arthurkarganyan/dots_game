@@ -9,7 +9,8 @@ export default class Board {
         this.height = height;
         this.color = "#c4c4cc";
         this.xCells = this.yCells = 18;
-        this.playerPoints = [];
+        let playerPoints = [];
+        this.getPlayerPoints = () => playerPoints;
 
         this.playerPointsMap = new Array(this.yCells);
         for (let i = 0; i < this.yCells; i++) {
@@ -24,7 +25,7 @@ export default class Board {
             return false;
 
         const newPoint = new PlayerPoint(x, y, this.gridSize, this.padding, player);
-        this.playerPoints.push(newPoint);
+        this.getPlayerPoints().push(newPoint);
         this.playerPointsMap[y][x] = newPoint;
 
         this.findDeadPoints(newPoint);
@@ -33,18 +34,18 @@ export default class Board {
     }
 
     findDeadPoints(newPoint) {
-        let t0 = performance.now();
+        // let t0 = performance.now();
 
         if (new EscapeAlgorithm(this.xCells, this.yCells, this.playerPointsMap, this.territories, this.playerList).isDead(newPoint))
             newPoint.dead = true;
 
-        for (let i = 0; i < this.playerPoints.length; i++) {
-            if (this.playerPoints[i].player === newPoint.player) continue;
-            if (this.playerPoints[i].dead) continue;
-            new EscapeAlgorithm(this.xCells, this.yCells, this.playerPointsMap, this.territories, this.playerList).isDead(this.playerPoints[i])
+        for (let i = 0; i < this.getPlayerPoints().length; i++) {
+            if (this.getPlayerPoints()[i].player === newPoint.player) continue;
+            if (this.getPlayerPoints()[i].dead) continue;
+            new EscapeAlgorithm(this.xCells, this.yCells, this.playerPointsMap, this.territories, this.playerList).isDead(this.getPlayerPoints()[i])
         }
-        let t1 = performance.now();
-        console.log("#findDeadPoints took " + (t1 - t0) + " milliseconds.");
+        // let t1 = performance.now();
+        // console.log("#findDeadPoints took " + (t1 - t0) + " milliseconds.");
     }
 
     drawBackground(ctx) {
@@ -64,7 +65,7 @@ export default class Board {
     }
 
     draw(ctx) {
-        this.playerPoints.forEach(i => {
+        this.getPlayerPoints().forEach(i => {
             if (i.dead) i.draw(ctx)
         });
         
@@ -76,7 +77,7 @@ export default class Board {
             ctx.restore();
         }
 
-        this.playerPoints.forEach(i => {
+        this.getPlayerPoints().forEach(i => {
             if (!i.dead) i.draw(ctx)
         });
     }

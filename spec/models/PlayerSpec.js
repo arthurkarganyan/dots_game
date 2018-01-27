@@ -1,4 +1,4 @@
-import Player from "../../src/models/player";
+import Player from "../../client/models/player";
 
 describe("Player", function () {
     it("build", function () {

@@ -97,7 +97,20 @@ board.drawBackground(ctxBackground);
 scoreBoard.build();
 animate();
 
-
-
-
+let url = 'http://localhost:8080';
+let ws = new WebSocket(url);
+let msg = "hi, this is simple message.";
+ws.onopen = function(evt) {
+    ws.send(msg);
+};
+ws.onmessage = function(evt) {
+    // handle this message
+    console.log(evt.data);
+};
+ws.onclose = function(evt) {
+    // this channel is closed
+};
+ws.onerror = function(evt) {
+    // handle this error
+};
 
