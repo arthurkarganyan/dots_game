@@ -108,6 +108,7 @@ describe("Board", function () {
             expect(board.territories[bluePlayer.colorName][0].coords()).toHaveSameItems(trace);
             expect(board.territories[bluePlayer.colorName].length).toBe(1);
             expect(bluePlayer.score).toBe(2);
+            expect(board.territories[bluePlayer.colorName][0].getInnerSize()).toBe(6);
         });
 
         it("slowEscapeAlgorithm #3", function () {
@@ -249,7 +250,7 @@ describe("Board", function () {
             expect(board.pointsMap[2][2].dead).toBe(true);
             expect(board.pointsMap[2][3].dead).toBe(true);
 
-            // expect(board.territories[redPlayer.colorName].length).toBe(1);
+            expect(board.territories[redPlayer.colorName][0].getInnerSize()).toBe(2);
             // console.log(board.territories[redPlayer.colorName].map((i) => i.firstPoint()))
         });
     })

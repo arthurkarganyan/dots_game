@@ -34,7 +34,7 @@ export default class EscapeAlgorithm {
             slowEscapeMarkedMap[i] = new Array(this.xCells);
         }
         slowEscapeMarkedMap[point.y][point.x] = 1;
-        let territorySize = 0;
+        let territorySize = 1;
         while (toVisit.length) { // While there are still squares to visit
             let arr = [
                 [toVisit[0][0] - 1, toVisit[0][1]],
