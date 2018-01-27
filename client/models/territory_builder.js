@@ -4,7 +4,7 @@ import Territory from "./territory";
 export default class TerritoryBuilder {
     constructor(territories, playerPointsMap) {
         this.territories = territories;
-        this.playerPointsMap = playerPointsMap;
+        this.pointsMap = playerPointsMap;
     }
 
     createTerritoryAround(failedEscapeMap, player) {
@@ -49,8 +49,8 @@ export default class TerritoryBuilder {
         while (bug.yStart !== bug.y || bug.xStart !== bug.x) {
             // TODO possible bug when is another dot owned by 3rd player
 
-            if (this.playerPointsMap[bug.y][bug.x] && this.playerPointsMap[bug.y][bug.x].player === player &&
-                territory.points.slice(-1)[0] !== this.playerPointsMap[bug.y][bug.x] // uniqueness check
+            if (this.pointsMap[bug.y][bug.x] && this.pointsMap[bug.y][bug.x].player === player &&
+                territory.points.slice(-1)[0] !== this.pointsMap[bug.y][bug.x] // uniqueness check
             ) {
                 if (territory.size() === 0) {
                     for (let i = 0; i < this.territories[player.colorName].length; i++) {
@@ -58,7 +58,7 @@ export default class TerritoryBuilder {
                             this.territories[player.colorName][i].firstPoint().y === bug.y) return;
                     }
                 }
-                territory.push(this.playerPointsMap[bug.y][bug.x]);
+                territory.push(this.pointsMap[bug.y][bug.x]);
             }
 
             atCornerCheck();
@@ -66,7 +66,7 @@ export default class TerritoryBuilder {
             move();
         }
 
-        territory.push(this.playerPointsMap[bug.yStart][bug.xStart]);
+        territory.push(this.pointsMap[bug.yStart][bug.xStart]);
 
         this.territories[player.colorName].push(territory);
     }

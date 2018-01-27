@@ -12,40 +12,56 @@ export default class Board {
         let playerPoints = [];
         this.getPlayerPoints = () => playerPoints;
 
-        this.playerPointsMap = new Array(this.yCells);
+        this.pointsMap = new Array(this.yCells);
         for (let i = 0; i < this.yCells; i++) {
-            this.playerPointsMap[i] = new Array(this.xCells);
+            this.pointsMap[i] = new Array(this.xCells);
         }
+
         this.territories = {};
         this.playerList = playerList;
+
+        let pointsCount = 0;
+        this.getPointsCount = () => pointsCount;
+        this.incPointsCount = () => pointsCount++;
+        this.getTerritoryOccupied = () => {
+            return (pointsCount / (this.xCells * this.yCells))
+        };
     }
 
     addPlayerPoint(x, y, player) {
-        if (this.playerPointsMap[y][x] !== undefined)
+        if (this.pointsMap[y][x] !== undefined)
             return false;
 
         const newPoint = new PlayerPoint(x, y, this.gridSize, this.padding, player);
         this.getPlayerPoints().push(newPoint);
-        this.playerPointsMap[y][x] = newPoint;
+        this.pointsMap[y][x] = newPoint;
 
         this.findDeadPoints(newPoint);
+
+        this.incPointsCount();
+
+        document.querySelector("#territory #percent").innerText = Math.round(this.getTerritoryOccupied() * 100) + "%";
 
         return true;
     }
 
     findDeadPoints(newPoint) {
-        // let t0 = performance.now();
-
-        if (new EscapeAlgorithm(this.xCells, this.yCells, this.playerPointsMap, this.territories, this.playerList).isDead(newPoint))
+        if (new EscapeAlgorithm(this.xCells, this.yCells, this.pointsMap, this.territories, this.playerList).isDead(newPoint))
             newPoint.dead = true;
+
+        if ((newPoint.x === 0 || !this.pointsMap[newPoint.y][newPoint.x - 1]) &&
+            (newPoint.y === 0 || !this.pointsMap[newPoint.y - 1][newPoint.x]) &&
+            (newPoint.x === this.xCells - 1 || !this.pointsMap[newPoint.y][newPoint.x + 1]) &&
+            (newPoint.y === this.yCells - 1 || !this.pointsMap[newPoint.y + 1][newPoint.x])
+        ) {
+            return;
+        }
 
         for (let i = 0; i < this.getPlayerPoints().length; i++) {
             if (this.getPlayerPoints()[i].player === newPoint.player) continue;
             if (this.getPlayerPoints()[i].dead) continue;
-            new EscapeAlgorithm(this.xCells, this.yCells, this.playerPointsMap, this.territories, this.playerList).isDead(this.getPlayerPoints()[i])
+            new EscapeAlgorithm(this.xCells, this.yCells, this.pointsMap, this.territories, this.playerList).isDead(this.getPlayerPoints()[i])
         }
-        // let t1 = performance.now();
-        // console.log("#findDeadPoints took " + (t1 - t0) + " milliseconds.");
     }
 
     drawBackground(ctx) {
@@ -68,7 +84,7 @@ export default class Board {
         this.getPlayerPoints().forEach(i => {
             if (i.dead) i.draw(ctx)
         });
-        
+
         for (let playerColor in this.territories) {
             ctx.save();
             this.territories[playerColor].forEach(territory => {
@@ -96,8 +112,8 @@ export default class Board {
         for (let y = 0; y < this.yCells; y++) {
             str += '|';
             for (let x = 0; x < this.xCells; x++) {
-                if (this.playerPointsMap[y][x]) {
-                    str += this.playerPointsMap[y][x].textRepresentation();
+                if (this.pointsMap[y][x]) {
+                    str += this.pointsMap[y][x].textRepresentation();
                 } else {
                     str += " ";
                 }

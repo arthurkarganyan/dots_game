@@ -72,12 +72,14 @@ const mousePoint = new GraphicalPoint(-1, -1, currentPlayer.color, 4);
 objects.push(board);
 objects.push(mousePoint);
 
+let t0 = performance.now();
 for (let i = 0; i < 50; i++) {
-    if (!board.addPlayerPoint(
-            ~~(Math.random() * board.xCells),
-            ~~(Math.random() * board.yCells),
-            players[i % players.length])) i--;
+    !board.addPlayerPoint(
+        ~~(Math.random() * board.xCells),
+        ~~(Math.random() * board.yCells),
+        players[i % players.length]);
 }
+console.log("#findDeadPoints took " + (performance.now() - t0) + " milliseconds.");
 
 function animate() {
     let xP = Math.round((mouse.x - board.padding) / board.gridSize) * board.gridSize + board.padding;
@@ -97,20 +99,20 @@ board.drawBackground(ctxBackground);
 scoreBoard.build();
 animate();
 
-let url = 'http://localhost:8080';
-let ws = new WebSocket(url);
-let msg = "hi, this is simple message.";
-ws.onopen = function(evt) {
-    ws.send(msg);
-};
-ws.onmessage = function(evt) {
-    // handle this message
-    console.log(evt.data);
-};
-ws.onclose = function(evt) {
-    // this channel is closed
-};
-ws.onerror = function(evt) {
-    // handle this error
-};
+// let url = 'http://localhost:8080';
+// let ws = new WebSocket(url);
+// let msg = "hi, this is simple message.";
+// ws.onopen = function(evt) {
+//     ws.send(msg);
+// };
+// ws.onmessage = function(evt) {
+//     // handle this message
+//     console.log(evt.data);
+// };
+// ws.onclose = function(evt) {
+//     // this channel is closed
+// };
+// ws.onerror = function(evt) {
+//     // handle this error
+// };
 

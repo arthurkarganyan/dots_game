@@ -16,20 +16,32 @@ body {
     margin: 0;
 }
 
-#score {
+table {
+    border-collapse: collapse;
+}
+
+#right_block {
     position: absolute;
     left: 550px;
     top: 10px;
 }
 
-#score table td, #score table th {
+#right_block table td, #right_block table th {
     border: 2px #e1e1e5 solid;
     text-align: center;
     padding: 8px;
 }
 
-#score table {
-    border-collapse: collapse;
+#territory {
+    margin-top: 20px;
+}
+
+#territory table{
+    width: 100%;
+}
+
+.strong {
+    font-weight: bold;
 }
 
 .circle:before {

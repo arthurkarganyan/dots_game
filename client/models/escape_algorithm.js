@@ -4,7 +4,7 @@ export default class EscapeAlgorithm {
     constructor(xCells, yCells, playerPointsMap, territories, playerList) {
         this.yCells = yCells;
         this.xCells = xCells;
-        this.playerPointsMap = playerPointsMap;
+        this.pointsMap = playerPointsMap;
         this.territoryBuilder = new TerritoryBuilder(territories, playerPointsMap);
         this.playerList = playerList;
     }
@@ -47,7 +47,7 @@ export default class EscapeAlgorithm {
                 let y;
                 [x, y] = arr[i];
 
-                if (slowEscapeMarkedMap[y][x] || this.playerPointsMap[y][x] && !this.playerPointsMap[y][x].dead && this.playerPointsMap[y][x].player === player) {
+                if (slowEscapeMarkedMap[y][x] || this.pointsMap[y][x] && !this.pointsMap[y][x].dead && this.pointsMap[y][x].player === player) {
                     continue;
                 } else {
                     // TODO possible bug
@@ -75,7 +75,7 @@ export default class EscapeAlgorithm {
         let escaped = true;
 
         for (let x = point.x; x >= 0; x--) {
-            if (this.playerPointsMap[y][x] && !this.playerPointsMap[y][x].dead && this.playerPointsMap[y][x].player !== point.player) {
+            if (this.pointsMap[y][x] && !this.pointsMap[y][x].dead && this.pointsMap[y][x].player !== point.player) {
                 escaped = false;
                 break;
             }
@@ -86,7 +86,7 @@ export default class EscapeAlgorithm {
         escaped = true;
 
         for (let x = point.x; x < this.xCells; x++) {
-            if (this.playerPointsMap[y][x] && !this.playerPointsMap[y][x].dead && this.playerPointsMap[y][x].player !== point.player) {
+            if (this.pointsMap[y][x] && !this.pointsMap[y][x].dead && this.pointsMap[y][x].player !== point.player) {
                 escaped = false;
                 break;
             }
@@ -97,7 +97,7 @@ export default class EscapeAlgorithm {
         escaped = true;
 
         for (let y = point.y; y >= 0; y--) {
-            if (this.playerPointsMap[y][x] && !this.playerPointsMap[y][x].dead && this.playerPointsMap[y][x].player !== point.player) {
+            if (this.pointsMap[y][x] && !this.pointsMap[y][x].dead && this.pointsMap[y][x].player !== point.player) {
                 escaped = false;
                 break;
             }
@@ -108,7 +108,7 @@ export default class EscapeAlgorithm {
         escaped = true;
 
         for (let y = point.y; y < this.yCells; y++) {
-            if (this.playerPointsMap[y][x] && !this.playerPointsMap[y][x].dead && this.playerPointsMap[y][x].player !== point.player) {
+            if (this.pointsMap[y][x] && !this.pointsMap[y][x].dead && this.pointsMap[y][x].player !== point.player) {
                 escaped = false;
                 break;
             }

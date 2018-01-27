@@ -11,17 +11,29 @@
 <body>
 <canvas class="background"></canvas>
 <canvas class="foreground"></canvas>
-<div id="score">
-    <table>
-        <thead>
-        <tr>
-            <th>Color</th>
-            <th>Name</th>
-            <th>Score</th>
-        </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+<div id="right_block">
+    <div id="score">
+        <table>
+            <thead>
+            <tr>
+                <th>Color</th>
+                <th>Name</th>
+                <th>Score</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div id="territory">
+        <table>
+            <tbody>
+            <tr>
+                <td>Territory Occupied</td>
+                <td class="strong" id="percent">34%</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 <script src="dist/build.js"></script>
 </body>
