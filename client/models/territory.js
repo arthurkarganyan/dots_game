@@ -1,10 +1,11 @@
 export default class Territory {
-    constructor(player) {
+    constructor(player, innerSize) {
         // this.getPlayer() = player;
         this.points = [];
 
         let _player = player;
-        this.getPlayer = function() { return _player; }
+        this.getPlayer = function() { return _player; };
+        this.getInnerSize = function() { return innerSize; }
     }
 
     size() {

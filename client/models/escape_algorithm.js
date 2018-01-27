@@ -34,6 +34,7 @@ export default class EscapeAlgorithm {
             slowEscapeMarkedMap[i] = new Array(this.xCells);
         }
         slowEscapeMarkedMap[point.y][point.x] = 1;
+        let territorySize = 0;
         while (toVisit.length) { // While there are still squares to visit
             let arr = [
                 [toVisit[0][0] - 1, toVisit[0][1]],
@@ -56,6 +57,7 @@ export default class EscapeAlgorithm {
                     } else {
                         slowEscapeMarkedMap[y][x] = 1;
                         toVisit.push([x, y]);
+                        territorySize++;
                     }
                 }
             }
@@ -63,7 +65,7 @@ export default class EscapeAlgorithm {
             toVisit.shift();
         }
 
-        this.territoryBuilder.createTerritoryAround(slowEscapeMarkedMap, player);
+        this.territoryBuilder.createTerritoryAround(slowEscapeMarkedMap, player, territorySize);
 
         return false;
     }

@@ -39,7 +39,8 @@ export default class Board {
 
         this._incPointsCount();
 
-        document.querySelector("#territory #percent").innerText = Math.round(this.getTerritoryOccupied() * 100) + "%";
+        if(document)
+            document.querySelector("#territory #percent").innerText = Math.round(this.getTerritoryOccupied() * 100) + "%";
 
         return true;
     }

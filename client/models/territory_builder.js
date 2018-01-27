@@ -7,10 +7,10 @@ export default class TerritoryBuilder {
         this.pointsMap = playerPointsMap;
     }
 
-    createTerritoryAround(failedEscapeMap, player) {
+    createTerritoryAround(failedEscapeMap, player, innerSize) {
         if (!this.territories[player.colorName]) this.territories[player.colorName] = [];
 
-        let territory = new Territory(player);
+        let territory = new Territory(player, innerSize);
         let bug = {xStart: -1, yStart: -1, x: -1, y: -1, direction: "right"};
 
         outerLoop:
