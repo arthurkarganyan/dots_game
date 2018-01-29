@@ -30,6 +30,7 @@ describe("Board", function () {
             board.addPlayerPoint(1, 1, redPlayer);
             expect(board.pointsMap[1][1]).toBeDefined();
 
+
             expect(board.pointsMap[1][1].dead).toBe(false);
             board.addPlayerPoint(0, 1, bluePlayer);
             expect(board.pointsMap[1][1].dead).toBe(false);
