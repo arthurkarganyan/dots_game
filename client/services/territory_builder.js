@@ -1,5 +1,5 @@
 // bug algorithm used (obstacle avoidance)
-import Territory from "./territory";
+import Territory from "./../models/territory";
 
 export default class TerritoryBuilder {
     constructor(territories, playerPointsMap) {

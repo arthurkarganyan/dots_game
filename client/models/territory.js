@@ -16,6 +16,26 @@ export default class Territory {
         this.points.forEach(f);
     }
 
+    containingRect() {
+        if(this.containingRectValue)
+            return this.containingRectValue;
+        let minX = 100000000;
+        let minY = 100000000;
+        let maxX = -1;
+        let maxY = -1;
+
+        this.forEach(i => {
+            if(i.x < minX) minX = i.x;
+            if(i.y < minY) minY = i.y;
+            if(i.x > maxX) maxX = i.x;
+            if(i.y > maxY) maxY = i.y;
+        });
+
+        this.containingRectValue = [minX, minY, maxX, maxY];
+
+        return this.containingRectValue;
+    }
+
     clone() {
         let t = new Territory(this.getPlayer());
         t.points = this.points.slice(0);

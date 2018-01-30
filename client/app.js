@@ -1,7 +1,7 @@
 import GraphicalPoint from './models/graphical_point';
 import Board from './models/board';
 import Player from "./models/player";
-import ScoreBoard from "./models/score_board";
+import ScoreBoard from "./ui/score_board";
 
 import './lib/web_sockets';
 
@@ -28,7 +28,7 @@ const players = [];
 
 players.push(currentPlayer);
 players.push(Player.build("blue"));
-players.push(Player.build("green"));
+// players.push(Player.build("green"));
 
 const scoreBoard = new ScoreBoard(document.querySelector('#score'), players);
 

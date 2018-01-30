@@ -1,5 +1,5 @@
 import PlayerPoint from "./player_point";
-import EscapeAlgorithm from "./escape_algorithm";
+import EscapeAlgorithm from "./../services/escape_algorithm";
 
 export default class Board {
     constructor(width, height, playerList) {
