@@ -68,6 +68,17 @@ export default class TerritoryBuilder {
 
         territory.push(this.pointsMap[bug.yStart][bug.xStart]);
 
+        for (let playerColor in this.territories) {
+            this.territories[playerColor].forEach(i => {
+                if (i.containingRect()[0] >= territory.containingRect()[0] &&
+                    i.containingRect()[1] >= territory.containingRect()[1] &&
+                    i.containingRect()[2] <= territory.containingRect()[2] &&
+                    i.containingRect()[3] <= territory.containingRect()[3]) {
+                    i.getPlayer().emptyTerritoryOccupied -= i.getInnerSize();
+                }
+            });
+        }
+
         player.emptyTerritoryOccupied += innerSize;
         this.territories[player.colorName].push(territory);
     }

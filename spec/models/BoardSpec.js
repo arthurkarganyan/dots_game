@@ -26,7 +26,7 @@ describe("Board", function () {
 
     describe("two players", function () {
 
-        fit("fastEscapeAlgorithm", function () {
+        it("fastEscapeAlgorithm", function () {
             board.addPlayerPoint(1, 1, redPlayer);
             expect(board.pointsMap[1][1]).toBeDefined();
 
@@ -43,7 +43,7 @@ describe("Board", function () {
             expect(bluePlayer.score).toBe(1);
             expect(redPlayer.score).toBe(0);
             expect(bluePlayer.territoryOccupied()).toBe(5);
-            expect(redPlayer.territoryOccupied()).toBe(0)
+            expect(redPlayer.territoryOccupied()).toBe(0);
         });
 
         it("slowEscapeAlgorithm", function () {
@@ -219,7 +219,8 @@ describe("Board", function () {
             ], redPlayer);
 
             expect(board.territories[redPlayer.colorName].length).toBe(1);
-            // console.log(board.territories[redPlayer.colorName].map((i) => i.firstPoint()))
+            expect(redPlayer.territoryOccupied()).toBe(13);
+            expect(bluePlayer.territoryOccupied()).toBe(0);
         });
     });
 
