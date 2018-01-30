@@ -19,7 +19,7 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({server});
 
 wss.on('connection', function connection(ws, req) {
-    const location = url.parse(req.url, true);
+    // const location = url.parse(req.url, true);
     // You might use location.query.access_token to authenticate or share sessions
     // or req.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
 
@@ -27,7 +27,7 @@ wss.on('connection', function connection(ws, req) {
         console.log('received: %s', message);
     });
 
-    ws.send('something');
+    // ws.send('something');
 });
 
 server.listen(8080, function listening() {
@@ -46,5 +46,5 @@ app.use('/', express.static(__root + '/public'));
 app.listen(3000, () => console.log('listening on port 3000!'));
 
 process.on('uncaughtException', function (err) {
-    console.log('UNCAUGHT EXCEPTION - keeping process alive:',  err);
+    console.log('UNCAUGHT EXCEPTION - keeping process alive:', err);
 });

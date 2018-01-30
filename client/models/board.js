@@ -3,7 +3,7 @@ import EscapeAlgorithm from "./escape_algorithm";
 
 export default class Board {
     constructor(width, height, playerList) {
-        this.gridSize = 30;
+        this.gridSize = 28;
         this.padding = 10;
         this.width = width;
         this.height = height;

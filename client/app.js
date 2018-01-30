@@ -3,6 +3,8 @@ import Board from './models/board';
 import Player from "./models/player";
 import ScoreBoard from "./models/score_board";
 
+import './lib/web_sockets';
+
 const canvasForeground = document.querySelector('canvas.foreground');
 const ctxForeground = canvasForeground.getContext('2d');
 
@@ -108,13 +110,13 @@ let touchClick = event => {
 addEventListener('click', touchClick);
 
 addEventListener('resize', () => {
-    canvasForeground.width = innerWidth;
-    canvasForeground.height = innerHeight;
-    canvasBackground.width = innerWidth;
-    canvasBackground.height = innerHeight;
-    board.height = canvasForeground.height;
-    board.width = canvasForeground.width;
-    board.drawBackground(ctxBackground);
+    // canvasForeground.width = innerWidth;
+    // canvasForeground.height = innerHeight;
+    // canvasBackground.width = innerWidth;
+    // canvasBackground.height = innerHeight;
+    // board.height = canvasForeground.height;
+    // board.width = canvasForeground.width;
+    // board.drawBackground(ctxBackground);
     animate();
 });
 
@@ -151,23 +153,6 @@ function animate() {
 board.drawBackground(ctxBackground);
 scoreBoard.build();
 animate();
-
-let url = 'ws://localhost:8080';
-let ws = new WebSocket(url);
-ws.onopen = function (evt) {
-    ws.send("START!");
-};
-ws.onmessage = function (evt) {
-    // handle this message
-    console.log(evt.data);
-};
-ws.onclose = function (evt) {
-    console.log("Connection Closed")
-};
-ws.onerror = function (evt) {
-    console.log("Error occured")
-    // handle this error
-};
 
 window.onload = function () {
     let modal = new RModal(document.getElementById('modal'), {
@@ -217,3 +202,25 @@ window.onload = function () {
 
 
 terr();
+
+
+const url = 'ws://192.168.0.105:8080';
+const ws = new WebSocket(url);
+
+ws.onopen = function (evt) {
+    ws.send("START!");
+};
+
+ws.onmessage = function (evt) {
+    // handle this message
+    console.log(evt.data);
+};
+
+ws.onclose = function (evt) {
+    console.log("Connection Closed")
+};
+
+ws.onerror = function (evt) {
+    console.log("Error occured")
+    // handle this error
+};
