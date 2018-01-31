@@ -22,6 +22,8 @@ export default class ScoreBoard {
 
             this.tbody.appendChild(tr);
         }
+
+        return this;
     }
 
     _createTd(text, cssClass, style) {

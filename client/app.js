@@ -1,4 +1,3 @@
-import GraphicalPoint from './models/graphical_point';
 import Board from './models/board';
 import Player from "./models/player";
 import ScoreBoard from "./ui/score_board";
@@ -7,6 +6,7 @@ import './lib/web_sockets';
 import './lib/modal';
 import { updateProgress } from './lib/progress';
 import CursorPoint from "./models/cursor_point";
+import { ws } from "./lib/web_sockets";
 
 const canvasForeground = document.querySelector('canvas.foreground');
 const ctxForeground = canvasForeground.getContext('2d');
@@ -27,7 +27,7 @@ players.push(currentPlayer);
 players.push(Player.build("blue"));
 // players.push(Player.build("green"));
 
-const scoreBoard = new ScoreBoard(document.querySelector('#score'), players);
+const scoreBoard = new ScoreBoard(document.querySelector('#score'), players).build();
 
 let playerTurnIndex = 0;
 
@@ -106,28 +106,6 @@ function animate() {
 }
 
 board.drawBackground(ctxBackground);
-scoreBoard.build();
 animate();
 
 updateProgress(players, board);
-
-const url = 'ws://192.168.0.105:8080';
-const ws = new WebSocket(url);
-
-ws.onopen = function (evt) {
-    ws.send("START!");
-};
-
-ws.onmessage = function (evt) {
-    // handle this message
-    console.log(evt.data);
-};
-
-ws.onclose = function (evt) {
-    console.log("Connection Closed")
-};
-
-ws.onerror = function (evt) {
-    console.log("Error occured")
-    // handle this error
-};
