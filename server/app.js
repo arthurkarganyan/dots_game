@@ -23,11 +23,32 @@ wss.on('connection', function connection(ws, req) {
     // You might use location.query.access_token to authenticate or share sessions
     // or req.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
 
+    // clients.push(ws);
+
     ws.on('message', function incoming(message) {
         console.log('received: %s', message);
+        // JSON.parse(message)
+        wss.clients.forEach( i => {
+            if(i !== ws)
+                i.send(message);
+        })
     });
 
+    console.log("Number of clients: " + wss.clients.size); // it's Set
+
+    if (wss.clients.size >= 2) {
+        wss.clients.forEach( i => {
+            i.send("Start");
+        })
+    }
+
     // ws.send('something');
+
+    // console.log(wss.clients);
+    // wss.clients.forEach(function each(ws) {
+    //
+    //     ws.send('something');
+    // });
 });
 
 server.listen(8080, function listening() {

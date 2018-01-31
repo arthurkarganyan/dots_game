@@ -3,12 +3,18 @@ export const ws = (function () {
     const ws = new WebSocket(url);
 
     ws.onopen = function (evt) {
-        ws.send("START!");
+        // ws.send("START!");
     };
 
     ws.onmessage = function (evt) {
         // handle this message
         console.log(evt.data);
+        let msg = JSON.parse(evt.data);
+        if (msg.type === "Start") {
+            return ws.gameStartCallback(msg.data);
+        }
+
+        ws.pointAddCallback(obj.x, obj.y);
     };
 
     ws.onclose = function (evt) {
@@ -19,6 +25,7 @@ export const ws = (function () {
         console.log("Error occured")
         // handle this error
     };
+
 
     return ws;
 })();

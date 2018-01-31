@@ -1,5 +1,5 @@
 window.onload = function () {
-    let modal = new RModal(document.getElementById('modal'), {
+    let modal = new RModal(document.getElementById('waiting-modal'), {
         //content: 'Abracadabra'
         beforeOpen: function (next) {
             next();
@@ -43,6 +43,5 @@ window.onload = function () {
         })
     });
 
-
-    // modal.open();
+    modal.open();
 };

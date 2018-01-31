@@ -7,6 +7,13 @@ import './lib/modal';
 import { updateProgress } from './lib/progress';
 import CursorPoint from "./models/cursor_point";
 import { ws } from "./lib/web_sockets";
+ws.gameStartCallback = (data) => {
+    window.modal.close();
+    currentPlayer = Player.build(data.players.current.color);
+    players.push(currentPlayer);
+    // data.players.current.color
+    players.push(Player.build("blue"));
+};
 
 const canvasForeground = document.querySelector('canvas.foreground');
 const ctxForeground = canvasForeground.getContext('2d');
@@ -23,8 +30,6 @@ canvasBackground.height = innerHeight;
 let currentPlayer = Player.build("red");
 const players = [];
 
-players.push(currentPlayer);
-players.push(Player.build("blue"));
 // players.push(Player.build("green"));
 
 const scoreBoard = new ScoreBoard(document.querySelector('#score'), players).build();
@@ -57,6 +62,7 @@ let t = (x, y) => {
         updateProgress(players, board);
     }
 };
+ws.pointAddCallback = t;
 
 let touchClick = event => {
     let xCoord = ~~((mousePoint.x - board.padding) / board.gridSize);
@@ -88,14 +94,14 @@ mousePoint.onChangeCall(animate);
 objects.push(board);
 objects.push(mousePoint);
 
-let t0 = performance.now();
-for (let i = 0; i < 50; i++) {
-    !board.addPlayerPoint(
-        ~~(Math.random() * board.xCells),
-        ~~(Math.random() * board.yCells),
-        players[i % players.length]);
-}
-console.log("#findDeadPoints took " + (performance.now() - t0) + " milliseconds.");
+// let t0 = performance.now();
+// for (let i = 0; i < 50; i++) {
+//     !board.addPlayerPoint(
+//         ~~(Math.random() * board.xCells),
+//         ~~(Math.random() * board.yCells),
+//         players[i % players.length]);
+// }
+// console.log("#findDeadPoints took " + (performance.now() - t0) + " milliseconds.");
 
 function animate() {
     ctxForeground.clearRect(0, 0, canvasForeground.width, canvasForeground.height);
