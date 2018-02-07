@@ -7,6 +7,7 @@ export default class CursorPoint extends GraphicalPoint {
     }
 
     mouseMoved(clientX, clientY) {
+        if (window.state !== "play") return;
         if (!(clientX < this.board.maxWidth() && clientY < this.board.maxHeight())) return;
         let playerPointX = Math.round((clientX - this.board.padding) / this.board.gridSize);
         let playerPointY = Math.round((clientY - this.board.padding) / this.board.gridSize);

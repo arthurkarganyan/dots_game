@@ -3,12 +3,14 @@ import Player from "./models/player";
 import ScoreBoard from "./ui/score_board";
 
 import './lib/web_sockets';
+import './lib/state';
 import './lib/modal';
 import { updateProgress } from './lib/progress';
+
 import CursorPoint from "./models/cursor_point";
 import { ws } from "./lib/web_sockets";
 ws.gameStartCallback = (data) => {
-    window.modal.close();
+    window.playerNameModal.close();
     currentPlayer = Player.build(data.players.current.color);
     players.push(currentPlayer);
     // data.players.current.color
@@ -29,6 +31,7 @@ canvasBackground.height = innerHeight;
 
 let currentPlayer = Player.build("red");
 const players = [];
+window.waiting = true;
 
 // players.push(Player.build("green"));
 
@@ -65,6 +68,7 @@ let t = (x, y) => {
 ws.pointAddCallback = t;
 
 let touchClick = event => {
+    if(window.state !== "play") return;
     let xCoord = ~~((mousePoint.x - board.padding) / board.gridSize);
     let yCoord = ~~((mousePoint.y - board.padding) / board.gridSize);
 
@@ -94,15 +98,6 @@ mousePoint.onChangeCall(animate);
 objects.push(board);
 objects.push(mousePoint);
 
-// let t0 = performance.now();
-// for (let i = 0; i < 50; i++) {
-//     !board.addPlayerPoint(
-//         ~~(Math.random() * board.xCells),
-//         ~~(Math.random() * board.yCells),
-//         players[i % players.length]);
-// }
-// console.log("#findDeadPoints took " + (performance.now() - t0) + " milliseconds.");
-
 function animate() {
     ctxForeground.clearRect(0, 0, canvasForeground.width, canvasForeground.height);
 
@@ -115,3 +110,8 @@ board.drawBackground(ctxBackground);
 animate();
 
 updateProgress(players, board);
+
+// states
+// http://www.nomnoml.com/#view/%0A%0A%0A%5Bid%5D-%3E%5Bwait%5D%0A%5Bwait%5D-%3E%5Bplay%5D%0A%5Bplay%5D-%3E%5Bid%5D%0A
+
+window.state = "id";
