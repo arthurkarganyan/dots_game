@@ -1,0 +1,33 @@
+version: '3'
+services:
+  app:
+    tty: true
+    stdin_open: true
+    image: "dotsgame"
+    ports:
+    - 3000:3000
+    - 8080:8080
+    volumes:
+      - .:/myapp
+    environment:
+      - REDIS_HOST=redis # `redis` is actual host!
+  redis:
+    image: "redis:alpine"
+    ports:
+      - 6379:6379
+  mongo:
+    image: "mongo:latest"
+    ports:
+      - 27017:27017
+#    networks:
+#      app_net:
+#        ipv4_address: 10.0.0.5
+#
+##networks:
+#  app_net:
+#    driver: overlay
+#    ipam:
+#      driver: default
+#      config:
+#      -
+#        subnet: 10.0.0.5/24

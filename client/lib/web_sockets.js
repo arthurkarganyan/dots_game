@@ -3,14 +3,22 @@ export const ws = (function () {
     let ws = new WebSocket(url);
 
     ws.onmessage = function (evt) {
-        console.log(evt.data);
+        console.log("recieved: " + evt.data);
         let msg = JSON.parse(evt.data);
-        if (msg.type === "Start" && window.state === "wait") {
-            window.changeState("play");
-            return ws.gameStartCallback(msg.data);
+        if (msg.type === "start" && window.state === "wait") {
+            return ws.gameStartCallback(msg.msg);
         }
 
-        // ws.pointAddCallback(obj.x, obj.y);
+        if (msg.type === "new_point") {
+            console.log("got new point from server");
+            return ws.pointAddCallback(msg.msg.x, msg.msg.y);
+        }
+
+        if (msg.type === "time_is_up") {
+            return ws.timeIsUpCallback();
+        }
+
+        throw("Unknown msg type: " + msg.type);
     };
 
     ws.onopen = function (evt) {
@@ -25,19 +33,19 @@ export const ws = (function () {
                 if (ws.readyState !== WebSocket.OPEN) {
                     console.log("reconnecting: " + timeout);
                     ws = new WebSocket(url);
-                    tryConnect(timeout * 2);
+                    tryConnect(timeout);
                 }
             }, timeout);
         }
 
-        tryConnect(2000);
+        tryConnect(5000);
     };
     ws.onerror = function (evt) {
         console.log("Error occured")
     };
 
     window.sendWsMsg = function (msg) {
-        ws.send(msg);
+        ws.send(JSON.stringify(msg));
     };
 
     return ws;

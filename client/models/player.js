@@ -1,10 +1,10 @@
 export default class Player {
-    static build(colorName) {
+    static build(colorName, playerName) {
         let obj = this.presets()[colorName];
         if (!obj)
             throw `Incorrect color name: ${colorName}`;
 
-        return new Player(colorName, obj['color'], obj['backColor'], obj['textRepresentation'], obj['textRepresentationDead'])
+        return new Player(colorName, obj['color'], obj['backColor'], obj['textRepresentation'], obj['textRepresentationDead'], playerName)
     }
 
     static colorNames() {
@@ -84,7 +84,7 @@ export default class Player {
         this.textRepresentation = textRepresentation;
         this.textRepresentationDead = textRepresentationDead;
         this.score = 0;
-        this.name = (name || "Player") + " " + colorName;
+        this.name = (name || "Player");
         this.emptyTerritoryOccupied = 0;
         this.livePointsCount = 0;
     }
@@ -96,7 +96,6 @@ export default class Player {
     getName() {
         return this.name;
     }
-
 
     setScore(score) {
         this.score = score;

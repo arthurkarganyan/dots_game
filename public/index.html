@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="css/lumen.bootstrap.min.css"/>
     <link rel="stylesheet" href="css/style.css">
 
-    <link rel="stylesheet" href="css/animate.css" type="text/css"/>
+    <!--<link rel="stylesheet" href="css/animate.css" type="text/css"/>-->
     <link rel="author" href="humans.txt">
     <script type="text/javascript" src="js/rmodal.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
@@ -17,6 +17,14 @@
 <canvas class="background"></canvas>
 <canvas class="foreground"></canvas>
 <div id="right_block" class="elementToFadeInAndOut">
+    <div id="timer">
+        <h4 style="text-align: center">Your Turn</h4>
+        <div class="wrapper active">
+            <div class="spinner pie"></div>
+            <div class="filler pie"></div>
+            <div class="mask"></div>
+        </div>
+    </div>
     <div id="score">
         <table>
             <thead>
@@ -57,43 +65,44 @@
         <button class="btn btn-primary " type="submit">+ Add Point</button>
     </div>
 
-    <div id="player-name" class="modal">
-        <div class="modal-dialog animated">
-            <div class="modal-content">
-                <form class="form-horizontal" onsubmit="return playerNameModal.submit(this);" name="player-name">
-                    <div class="modal-header">
-                        <strong>Yep, let's Play...</strong>
-                    </div>
+</div>
+<div id="player-name" class="modal">
+    <div class="modal-dialog animated">
+        <div class="modal-content">
+            <form class="form-horizontal" onsubmit="return playerNameModal.submit(this);" name="player-name">
+                <div class="modal-header">
+                    <strong>Yep, let's Play...</strong>
+                </div>
 
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="playerName" class="control-label col-xs-4">Your nickname?</label>
-                            <div class="input-group col-xs-7">
-                                <input type="text" name="playerName" id="playerName" class="form-control" required autofocus/>
-                            </div>
-                        </div>
-
-                        <!--<h6>Game mode:</h6>-->
-                        <!--<div class="btn-group btn-group-toggle" data-toggle="buttons">-->
-                        <!--<label class="btn btn-primary active">-->
-                        <!--<input type="radio" name="options" id="option1" autocomplete="off"> 2 players-->
-                        <!--</label>-->
-                        <!--<label class="btn btn-primary">-->
-                        <!--<input type="radio" name="options" id="option2" autocomplete="off"> 4 players-->
-                        <!--</label>-->
-                        <!--</div>-->
-                    </div>
-
-                    <div class="modal-footer">
-                        <!--<button class="btn btn-default" type="button" onclick="modal.close();">Cancel</button>-->
-                        <button class="btn btn-primary" type="submit">Start</button>
-                        <div id="ajax-loader" style="display: none">
-                            <span>Waiting for another player</span>
-                            <img src="img/ajax-loader.gif">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="playerName" class="control-label col-xs-4">Your Name?</label>
+                        <div class="input-group col-xs-7">
+                            <input type="text" name="playerName" id="playerName" class="form-control" required autofocus
+                                   autocomplete="off"/>
                         </div>
                     </div>
-                </form>
-            </div>
+
+                    <!--<h6>Game mode:</h6>-->
+                    <!--<div class="btn-group btn-group-toggle" data-toggle="buttons">-->
+                    <!--<label class="btn btn-primary active">-->
+                    <!--<input type="radio" name="options" id="option1" autocomplete="off"> 2 players-->
+                    <!--</label>-->
+                    <!--<label class="btn btn-primary">-->
+                    <!--<input type="radio" name="options" id="option2" autocomplete="off"> 4 players-->
+                    <!--</label>-->
+                    <!--</div>-->
+                </div>
+
+                <div class="modal-footer">
+                    <!--<button class="btn btn-default" type="button" onclick="modal.close();">Cancel</button>-->
+                    <button class="btn btn-primary" type="submit">Start</button>
+                    <div id="ajax-loader" style="display: none">
+                        <span>Waiting for another player</span>
+                        <img src="img/ajax-loader.gif">
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

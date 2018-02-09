@@ -18,6 +18,7 @@ export default class ScoreBoard {
             tr.appendChild(this._createTd(player.name));
 
             player.scoreElement = this._createTd(player.score);
+            // debugger;
             tr.appendChild(player.scoreElement);
 
             this.tbody.appendChild(tr);
@@ -28,7 +29,8 @@ export default class ScoreBoard {
 
     _createTd(text, cssClass, style) {
         let node = document.createElement("td");
-        node.appendChild(document.createTextNode(text));
+        if(text !== undefined)
+            node.appendChild(document.createTextNode(text));
         node.className += cssClass;
         if (style)
             node.style = style;

@@ -1,67 +1,49 @@
 const express = require('express');
 const http = require('http');
-const url = require('url');
-const WebSocket = require('ws');
+// require('import-export');
 
 const app = express();
 const __root = __dirname.split('/').slice(0, -1).join('/');
 
 const server = http.createServer(app);
-const wss = new WebSocket.Server({server});
 
+const redis = require("redis");
+const client = redis.createClient(6379, process.env.REDIS_HOST);
+const session = require('express-session');
+const RedisStore = require('connect-redis')(session);
+const _ = require('underscore');
 
-function noop() {}
+const sessionStore = new RedisStore({port: 6379, host: process.env.REDIS_HOST});
 
-function heartbeat() {
-    this.isAlive = true;
-}
+// import {startWss} from './wss.js';
+const wssModule = require(__root + "/server/wss.js");
 
-const interval = setInterval(function ping() {
-    wss.clients.forEach(function each(ws) {
-        if (ws.isAlive === false) {
-            console.log("terminated");
-            wss.clients.delete(ws);
-            console.log("Number of clients: " + wss.clients.size); // it's Set
-            return ws.terminate();
-        }
+wssModule.startWss(server);
 
-        ws.isAlive = false;
-        ws.ping(noop);
-    });
-}, 10000);
+app.use(session({
+    store: sessionStore,
+    secret: 'keyboard catzzzz',
+    resave: false,
+    name: 'sessionId'
+}));
 
-wss.on('connection', function connection(ws, req) {
-    ws.isAlive = true;
-    ws.on('pong', heartbeat);
-    // const location = url.parse(req.url, true);
-    // You might use location.query.access_token to authenticate or share sessions
-    // or req.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
+client.on("error", err => console.log("Error " + err));
 
-    // clients.push(ws);
-
-    ws.on('message', function incoming(message) {
-        console.log('received: %s', message);
-
-        // JSON.parse(message)
-        wss.clients.forEach(i => {
-            if (i !== ws && i.readyState === WebSocket.OPEN)
-                i.send(message);
-        })
-    });
-
-    console.log("Number of clients: " + wss.clients.size); // it's Set
-
-    if (wss.clients.size >= 2) {
-        wss.clients.forEach(i => {
-            if (i.readyState === WebSocket.OPEN)
-                i.send(JSON.stringify({type: 'Start'}));
-        })
+app.get('/a', function (req, res) {
+    if (req.session.page_views) {
+        req.session.page_views++;
+        res.send("You visited this page " + req.session.page_views + " times. SessionID:" + req.sessionID);
+    } else {
+        req.session.page_views = 1;
+        res.send("Welcome to this page for the first time!");
     }
 });
 
-server.listen(8080, function listening() {
-    console.log('Listening websockets on %d', server.address().port);
+app.get('/b', function (req, res) {
+    console.log("b: " + req.sessionID);
+    res.sendFile(__root + '/public/index.html');
 });
+
 
 app.use('/', express.static(__root + '/public'));
 
