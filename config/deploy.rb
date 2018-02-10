@@ -123,6 +123,6 @@ namespace :deploy do
   before 'deploy:starting', 'deploy:ensure_docker'
 
   after 'deploy:updating', 'deploy:build_image'
-  after 'deploy:build_image', 'deploy:compose_compose_restart'
+  after 'deploy:build_image', 'deploy:compose_restart'
   after 'deploy:updated', 'deploy:webpack'
 end
