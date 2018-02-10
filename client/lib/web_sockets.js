@@ -1,5 +1,6 @@
 export const ws = (function () {
-    const url = 'ws://192.168.0.106:8080';
+    const url = 'ws://' + DOMAIN_NAME + ':8080';
+    console.log("Websocket URL: " + url);
     let ws = new WebSocket(url);
 
     ws.onmessage = function (evt) {

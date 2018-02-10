@@ -11,6 +11,7 @@ services:
 #      - .:/myapp
     environment:
       - REDIS_HOST=redis # `redis` is actual host!
+      - SERVER_PORT=3000
   redis:
     image: "redis:alpine"
     ports:

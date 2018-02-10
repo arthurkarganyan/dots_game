@@ -22,32 +22,33 @@ wssModule.startWss(server);
 
 app.use(session({
     store: sessionStore,
-    secret: 'keyboard catzzzz',
+    secret: 'keyboard catzzzz _918htlh17t3h2j3dt82du4nthe3hc',
     resave: false,
     name: 'sessionId'
 }));
 
 client.on("error", err => console.log("Error " + err));
 
-app.get('/a', function (req, res) {
-    if (req.session.page_views) {
-        req.session.page_views++;
-        res.send("You visited this page " + req.session.page_views + " times. SessionID:" + req.sessionID);
-    } else {
-        req.session.page_views = 1;
-        res.send("Welcome to this page for the first time!");
-    }
-});
-
-app.get('/b', function (req, res) {
-    console.log("b: " + req.sessionID);
-    res.sendFile(__root + '/public/index.html');
-});
+// app.get('/a', function (req, res) {
+//     if (req.session.page_views) {
+//         req.session.page_views++;
+//         res.send("You visited this page " + req.session.page_views + " times. SessionID:" + req.sessionID);
+//     } else {
+//         req.session.page_views = 1;
+//         res.send("Welcome to this page for the first time!");
+//     }
+// });
+//
+// app.get('/b', function (req, res) {
+//     console.log("b: " + req.sessionID);
+//     res.sendFile(__root + '/public/index.html');
+// });
 
 
 app.use('/', express.static(__root + '/public'));
 
-app.listen(3000, () => console.log('listening on port 3000!'));
+const serverPost = process.env.SERVER_PORT;
+app.listen(serverPost, () => console.log('listening on port ' + serverPost + ' !'));
 
 process.on('uncaughtException', function (err) {
     console.log('UNCAUGHT EXCEPTION - keeping process alive:', err);

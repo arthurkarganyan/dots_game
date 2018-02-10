@@ -87,7 +87,9 @@ namespace :deploy do
 
   task :build_image do
     on roles(:docker) do |host|
-      execute "cd #{release_path} && docker build -t #{fetch(:application)} ."
+      cmd = "cd #{release_path} && "
+      cmd << "docker build --build-arg DOMAIN_NAME=#{host.hostname} -t #{fetch(:application)} ."
+      execute cmd
     end
   end
 
@@ -109,10 +111,18 @@ namespace :deploy do
       invoke 'deploy:compose_up'
     end
   end
+  #
+  # task :webpack do
+  #   on roles(:app) do |host|
+  #     execute "docker-compose -t #{fetch(:application)} -d"
+  #   end
+  # end
 
   # docker system prune
 
   before 'deploy:starting', 'deploy:ensure_docker'
+
   after 'deploy:updating', 'deploy:build_image'
   after 'deploy:build_image', 'deploy:compose_compose_restart'
+  after 'deploy:updated', 'deploy:webpack'
 end
