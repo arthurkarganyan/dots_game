@@ -118,8 +118,10 @@ namespace :deploy do
   end
 
   task :sysinfo do
-    execute "free -mh"
-    execute "df -h"
+    on roles(:all) do |host|
+      execute "free -mh"
+      execute "df -h"
+    end
   end
   #
   # task :webpack do

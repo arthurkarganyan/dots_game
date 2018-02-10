@@ -16,10 +16,10 @@ services:
     image: "redis:alpine"
     ports:
       - 6379:6379
-  mongo:
-    image: "mongo:latest"
-    ports:
-      - 27017:27017
+#  mongo:
+#    image: "mongo:latest"
+#    ports:
+#      - 27017:27017
 #    networks:
 #      app_net:
 #        ipv4_address: 10.0.0.5
