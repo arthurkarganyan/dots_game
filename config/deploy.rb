@@ -59,6 +59,13 @@ set :keep_releases, 3
 # end
 
 
+task :sysinfo do
+  on roles(:all) do |host|
+    execute "free -mh"
+    execute "df -h"
+  end
+end
+
 namespace :deploy do
 
   desc 'Installs Docker if necessary'
@@ -117,21 +124,6 @@ namespace :deploy do
     end
   end
 
-  task :sysinfo do
-    on roles(:all) do |host|
-      execute "free -mh"
-      execute "df -h"
-    end
-  end
-  #
-  # task :webpack do
-  #   on roles(:app) do |host|
-  #     execute "docker-compose -t #{fetch(:application)} -d"
-  #   end
-  # end
-
-  # docker system prune
-
   task :docker_clean_up do
     on roles(:docker) do |host|
       execute "docker system prune -af"
@@ -145,5 +137,5 @@ namespace :deploy do
 
   before 'deploy:cleanup', 'deploy:docker_clean_up'
 
-  after 'deploy:finished', 'deploy:sysinfo'
+  after 'deploy:finished', 'sysinfo'
 end
