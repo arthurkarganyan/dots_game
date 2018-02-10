@@ -11,6 +11,10 @@ import CursorPoint from "./models/cursor_point";
 import Timer from "./ui/timer";
 import {ws} from "./lib/web_sockets";
 
+const css3 = require("./css/lumen.bootstrap.min.css");
+const css = require("./css/animate.css");
+const css2 = require("./css/style.css");
+
 let currentPlayer;
 
 const mover = () => players[playerTurnIndex];

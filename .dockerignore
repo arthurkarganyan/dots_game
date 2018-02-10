@@ -1,0 +1,14 @@
+.idea
+doc
+node_modules/*
+public/dist/*
+
+# Ignore all logfiles and tempfiles.
+/log/*.log
+/tmp
+.DS_Store
+.git
+
+docker*
+Dockerfile
+

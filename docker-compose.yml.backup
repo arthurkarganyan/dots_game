@@ -7,8 +7,8 @@ services:
     ports:
     - 80:3000
     - 8080:8080
-#    volumes:
-#      - .:/myapp
+    volumes:
+      - .:/myapp
     environment:
       - REDIS_HOST=redis # `redis` is actual host!
   redis:

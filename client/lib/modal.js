@@ -1,3 +1,5 @@
+const RModal = require("../rmodal.js");
+
 window.onload = function () {
     window.playerNameModal = new RModal(document.getElementById('player-name'), {
         beforeOpen: next => next(),

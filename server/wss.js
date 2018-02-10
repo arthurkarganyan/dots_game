@@ -174,7 +174,7 @@ const startWss = (function (server) {
 
 
     server.listen(8080, function listening() {
-        log('Listening websockets on %d', server.address().port);
+        log('Listening websockets on ', + server.address().port);
     });
 });
 
