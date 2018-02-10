@@ -95,13 +95,18 @@ namespace :deploy do
 
   task :compose_down do
     on roles(:docker) do |host|
-      execute "docker-compose kill"
+      cmd = "cd #{release_path} && "
+      # cmd << "docker-compose kill"
+      cmd << "docker stop $(docker ps -a -q)"
+      execute cmd
     end
   end
 
   task :compose_up do
     on roles(:docker) do |host|
-      execute "docker-compose -f docker-compose.yml -f docker-compose.production.yml -t #{fetch(:application)} -d up"
+      cmd = "cd #{release_path} && "
+      cmd << "docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d"
+      execute cmd
     end
   end
 
@@ -110,6 +115,11 @@ namespace :deploy do
       invoke 'deploy:compose_down'
       invoke 'deploy:compose_up'
     end
+  end
+
+  task :sysinfo do
+    execute "free -mh"
+    execute "df -h"
   end
   #
   # task :webpack do
@@ -120,9 +130,18 @@ namespace :deploy do
 
   # docker system prune
 
+  task :docker_clean_up do
+    on roles(:docker) do |host|
+      execute "docker system prune -af"
+    end
+  end
+
   before 'deploy:starting', 'deploy:ensure_docker'
 
   after 'deploy:updating', 'deploy:build_image'
   after 'deploy:build_image', 'deploy:compose_restart'
-  after 'deploy:updated', 'deploy:webpack'
+
+  before 'deploy:cleanup', 'deploy:docker_clean_up'
+
+  after 'deploy:finished', 'deploy:sysinfo'
 end
