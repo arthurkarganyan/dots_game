@@ -101,7 +101,7 @@ namespace :deploy do
 
   task :compose_up do
     on roles(:docker) do |host|
-      execute "docker-compose -t #{fetch(:application)} -d"
+      execute "docker-compose -f docker-compose.yml -f docker-compose.production.yml -t #{fetch(:application)} -d up"
     end
   end
 
