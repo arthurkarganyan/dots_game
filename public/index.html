@@ -15,7 +15,11 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-113923785-1"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
         gtag('js', new Date());
 
         gtag('config', 'UA-113923785-1');
@@ -124,6 +128,19 @@
     <h4 class="alert-heading">Time is Up!</h4>
     <p class="mb-0">You've missed your turn</p>
 </div>
+
+<audio id="tick">
+    <source src="audio/tick.mp3" type="audio/mpeg">
+</audio>
+<audio id="connected">
+    <source src="audio/connected.mp3" type="audio/mpeg">
+</audio>
+<audio id="win">
+    <source src="audio/win.mp3" type="audio/mpeg">
+</audio>
+<audio id="lose">
+    <source src="audio/lose.mp3" type="audio/mpeg">
+</audio>
 
 <script src="dist/build.js"></script>
 </body>

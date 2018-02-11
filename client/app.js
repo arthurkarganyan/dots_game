@@ -66,6 +66,8 @@ const gameStart = (data) => {
 
     animate();
     updateProgress(players, board);
+
+    document.querySelector("audio#connected").play();
 };
 
 
@@ -176,6 +178,7 @@ const drawRejected = () => {
 
 const opponentDisconnect = () => {
     if(window.state !== "play") return;
+    document.querySelector("audio#win").play();
     alert("Your oppenent disconnected. Win!");
     quitGame();
 };
@@ -184,6 +187,7 @@ const fullBoard = () => {
     let score = players.map(i => i.score);
 
     if (score[0] > score[1]) {
+        document.querySelector("audio#win").play();
         alert("The game is over. You Won!")
     }
 
@@ -192,6 +196,7 @@ const fullBoard = () => {
     }
 
     if (score[0] < score[1]) {
+        document.querySelector("audio#lose").play();
         alert("The game is over. You Lost!")
     }
 
