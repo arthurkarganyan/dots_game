@@ -1,5 +1,5 @@
 export default class Timer {
-    constructor(timeIsUpFunc) {
+    constructor() {
         this.header = document.querySelector("#timer h4");
         this.wrapper = document.querySelector("#timer .wrapper");
         this.filler = this.wrapper.querySelector(".filler");
@@ -28,13 +28,6 @@ export default class Timer {
             }
         }, step);
 
-        // if (turnIndex === 0) {
-        //     setTimeout(() => {
-        //         that.stop();
-        //         that.timeIsUpFunc();
-        //     }, DURATION);
-        // }
-
         document.querySelector(".wrapper .filler").style.background = currentPlayerTurn.color;
         document.querySelector(".wrapper .spinner").style.background = currentPlayerTurn.color;
         // this.wrapper.classList += " active";
@@ -51,4 +44,5 @@ export default class Timer {
     setDuration(duration) {
         this.duration = duration;
     }
+
 }

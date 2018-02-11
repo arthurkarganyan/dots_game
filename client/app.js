@@ -11,8 +11,8 @@ import CursorPoint from "./models/cursor_point";
 import Timer from "./ui/timer";
 import {ws} from "./lib/web_sockets";
 
-const css3 = require("./css/lumen.bootstrap.min.css");
-const css = require("./css/animate.css");
+// const lumen = require("./css/lumen.bootstrap.css");
+// const css = require("./css/animate.css");
 const css2 = require("./css/style.css");
 
 let currentPlayer;
@@ -100,8 +100,40 @@ let addMyPoint = (x, y) => {
     window.sendWsMsg({type: "new_point", msg: {x: x, y: y}});
 };
 
+const showTimeIsUpAlert = () => {
+    const inAnimation = "fadeInLeft";
+    let alertDiv = document.querySelector(".alert");
+    alertDiv.style = "display: block";
+    alertDiv.classList += " " + inAnimation;
+
+    const fadedOut = () => {
+        alertDiv.classList.remove("flipOutX");
+        alertDiv.style = "display: none";
+        alertDiv.removeEventListener("animationend", fadedOut)
+    };
+
+    const fadedIn = () => {
+        alertDiv.classList.remove(inAnimation);
+
+        setTimeout(() => {
+            alertDiv.classList += " flipOutX";
+            alertDiv.addEventListener("animationend", fadedOut);
+        }, 3000);
+
+        console.log(this);
+        alertDiv.removeEventListener("animationend", fadedIn)
+    };
+
+    alertDiv.addEventListener("animationend", fadedIn)
+};
+
+const timeIsUp = () => {
+    if(playerTurnIndex === 0) showTimeIsUpAlert();
+    nextTurn();
+};
+
 ws.pointAddCallback = addOpponentPoint;
-ws.timeIsUpCallback = nextTurn;
+ws.timeIsUpCallback = timeIsUp;
 
 let touchClick = event => {
     if (window.state !== "play") return;

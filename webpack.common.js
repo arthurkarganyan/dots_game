@@ -1,9 +1,9 @@
 const path = require('path');
 const webpack = require('webpack');
+const glob = require('glob');
 
 const domainName = JSON.stringify((process.env.DOMAIN_NAME || "localhost"));
 console.log("\ndomainName:" + domainName);
-
 
 module.exports = {
     entry: './client/app.js',
@@ -40,7 +40,6 @@ module.exports = {
             // BROWSER_SUPPORTS_HTML5: true,
             // TWO: "1+1",
             // "typeof window": JSON.stringify("object")
-        })
+        }),
     ]
-
 };

@@ -16,16 +16,16 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "express": "^4.16.2",
+    "babel-loader": "^7.1.2",
     "colors": "^1.1.2",
-    "underscore": "^1.8.3",
+    "css-loader": "^0.28.9",
+    "express": "^4.16.2",
     "jasmine-collection-matchers": "^0.2.0",
     "jasmine-es6": "^0.4.3",
+    "style-loader": "^0.20.1",
+    "underscore": "^1.8.3",
     "webpack": "^3.10.0",
-    "webpack-merge": "^4.1.1",
-    "babel-loader": "^7.1.2",
-    "css-loader": "^0.28.9",
-    "style-loader": "^0.20.1"
+    "webpack-merge": "^4.1.1"
   },
   "dependencies": {
     "connect-redis": "^3.3.3",
