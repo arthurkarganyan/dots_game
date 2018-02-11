@@ -102,10 +102,7 @@ namespace :deploy do
 
   task :compose_down do
     on roles(:docker) do |host|
-      cmd = "cd #{release_path} && "
-      # cmd << "docker-compose kill"
-      cmd << "docker stop $(docker ps -a -q)"
-      execute cmd
+      execute "docker ps -a -q || docker stop $(docker ps -a -q)"
     end
   end
 
