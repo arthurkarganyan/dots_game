@@ -1,4 +1,9 @@
 const path = require('path');
+const webpack = require('webpack');
+
+const domainName = JSON.stringify((process.env.DOMAIN_NAME || "localhost"));
+console.log("\ndomainName:" + domainName);
+
 
 module.exports = {
     entry: './client/app.js',
@@ -27,4 +32,15 @@ module.exports = {
             }
         ]
     },
+    plugins: [
+        new webpack.DefinePlugin({
+            DOMAIN_NAME: domainName,
+            // PRODUCTION: JSON.stringify(true),
+            // VERSION: JSON.stringify("5fa3b9"),
+            // BROWSER_SUPPORTS_HTML5: true,
+            // TWO: "1+1",
+            // "typeof window": JSON.stringify("object")
+        })
+    ]
+
 };
