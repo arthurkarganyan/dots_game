@@ -16,8 +16,9 @@ body {
     margin: 0;
 }
 
-table {
+#score table {
     border-collapse: collapse;
+    width: 100%;
 }
 
 #right_block {
