@@ -102,7 +102,7 @@ namespace :deploy do
 
   task :compose_down do
     on roles(:docker) do |host|
-      execute "docker ps -a -q || docker stop $(docker ps -a -q)"
+      execute "docker stop $(docker ps -a -q)"
     end
   end
 
