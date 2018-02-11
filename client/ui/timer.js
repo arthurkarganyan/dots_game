@@ -7,7 +7,7 @@ export default class Timer {
         this.spinner = this.wrapper.querySelector(".spinner");
     }
 
-    activate(turnIndex, currentPlayerTurn) {
+    activate(turnIndex, mover) {
         this.stop();
         document.querySelector("#timer").style.visibility = "visible";
         this.header.innerText = turnIndex === 0 ? "Your Turn" : "Opponent's Turn";
@@ -28,8 +28,8 @@ export default class Timer {
             }
         }, step);
 
-        document.querySelector(".wrapper .filler").style.background = currentPlayerTurn.color;
-        document.querySelector(".wrapper .spinner").style.background = currentPlayerTurn.color;
+        document.querySelector(".wrapper .filler").style.background = mover.color;
+        document.querySelector(".wrapper .spinner").style.background = mover.color;
         // this.wrapper.classList += " active";
     }
 
