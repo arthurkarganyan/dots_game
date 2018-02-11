@@ -22,9 +22,11 @@ export default class Board {
 
         let pointsCount = 0;
         this._incPointsCount = () => pointsCount++;
-        this.getTerritoryOccupied = () => {
-            return pointsCount / (this.xCells * this.yCells);
-        };
+        let that = this;
+
+        this.getTerritoryOccupied = () => Math.round(playerList.reduce((sum, i) => {
+            return sum + 100 * (i.territoryOccupied() / (that.yCells * that.xCells));
+        }, 0));
     }
 
     addPlayerPoint(x, y, player) {
@@ -39,9 +41,8 @@ export default class Board {
 
         this._incPointsCount();
 
-        // FIXME
         try {
-            document.querySelector("#territory #percent").innerText = Math.round(this.getTerritoryOccupied() * 100) + "%";
+            document.querySelector("#territory #percent").innerText = this.getTerritoryOccupied() + "%";
         } catch (e) {
         }
 

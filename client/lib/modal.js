@@ -7,6 +7,9 @@ window.onload = function () {
         },
         beforeClose: next => next(),
         afterClose: () => {
+            document.forms["player-name"]["playerName"].readOnly = false;
+            document.querySelector("#player-name button[type='submit']").style.display = "block";
+            document.querySelector("#player-name #ajax-loader").style.display = "none";
         }
     });
 

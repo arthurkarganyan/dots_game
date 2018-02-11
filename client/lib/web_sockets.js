@@ -3,24 +3,6 @@ export const ws = (function () {
     console.log("Websocket URL: " + url);
     let ws = new WebSocket(url);
 
-    ws.onmessage = function (evt) {
-        console.log("recieved: " + evt.data);
-        let msg = JSON.parse(evt.data);
-        if (msg.type === "start" && window.state === "wait") {
-            return ws.gameStartCallback(msg.msg);
-        }
-
-        if (msg.type === "new_point") {
-            console.log("got new point from server");
-            return ws.pointAddCallback(msg.msg.x, msg.msg.y);
-        }
-
-        if (msg.type === "time_is_up") {
-            return ws.timeIsUpCallback();
-        }
-
-        throw("Unknown msg type: " + msg.type);
-    };
 
     ws.onopen = function (evt) {
         console.log("Connection Opened");

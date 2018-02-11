@@ -21,25 +21,52 @@ const log = msg => {
     console.log(formatted + " | " + msg);
 };
 
+const endGameFor = (ws) => {
+    clearInterval(ws.game.timeoutTimer);
+    clearInterval(ws.game.disconnectTimer);
+    delete ws.game;
+    delete ws.opponent;
+    delete ws.draw_offers;
+};
+
+const sendMsg = (ws, msg) => {
+    if (ws.readyState === WebSocket.OPEN) {
+        return ws.send(msg);
+    }
+};
+
 const incomingMsg = (msg, ws, req) => {
     log('received: ' + msg + " from " + ws.playerName);
-    // log(req.headers['sec-websocket-key']);
 
     let data = JSON.parse(msg);
     if (data.type === "new_point") {
-        ws.game.nextTurn();
-        // if (ws.timeoutTimer)
-        //     clearInterval(ws.timeoutTimer);
-        // let opponent = wss.activeClients().find(i => {
-        //     return i !== ws && i.gameId === ws.gameId;
-        // });
+        if (data.msg.territoryOccupied > 40) {
+            sendMsg(ws, JSON.stringify({type: "full_board"}));
+            sendMsg(ws.opponent, JSON.stringify({type: "full_board"}));
 
-        if (ws.opponent) {
-            ws.opponent.send(msg)
+            endGameFor(ws.opponent);
+            endGameFor(ws);
         } else {
-            log("Opponent not found!GameId: " + ws.gameId);
+            ws.game.nextTurn();
+
+            sendMsg(ws.opponent, msg);
         }
     }
+
+    if (data.type === "surrender" || data.type === "accept_draw") {
+        sendMsg(ws.opponent, msg);
+        endGameFor(ws)
+    }
+
+    if (data.type === "offer_draw") {
+        if (!ws.draw_offers || ws.draw_offers < 3) {
+            ws.draw_offers = ws.draw_offers ? ws.draw_offers + 1 : 1;
+            sendMsg(ws.opponent, msg);
+        }
+    }
+
+    if (data.type === "reject_draw")
+        sendMsg(ws.opponent, msg);
 
     if (data.type === "start_wait") {
         ws.state = "wait";
@@ -64,7 +91,7 @@ const incomingMsg = (msg, ws, req) => {
                 },
                 gameId: gameId,
                 turn: turn === 0 ? "you" : "opponent",
-                turnDuration: TURN_DURATION
+                turnDuration: TURN_DURATION - 2000
             };
 
             a[0].opponent = a[1];
@@ -119,22 +146,33 @@ const incomingMsg = (msg, ws, req) => {
 
             game.startTimer();
 
-            // ws.addTimeoutTimer = () => {
-            //     ws.timeoutTimer = setTimeout(function () {
-            //         log("Time is up for " + ws.playerName);
-            //         ws.send(JSON.stringify({type: "time_is_up"}));
-            //         ws.opponent.send(JSON.stringify({type: "time_is_up"}));
-            //         ws.opponent.addTimeoutTimer();
-            //     }, 15000);
-            // };
+            game.disconnectTimer = () => setInterval(() => {
+                game.players.forEach(i => {
+                        if (i.opponent && i.opponent.readyState !== WebSocket.OPEN) {
+                            i.send(JSON.stringify({type: "opponent_disconnect"}));
+                            endGameFor(i);
+                        }
+                    }
+                );
+            }, 10000);
+
+            game.disconnectTimer();
 
             a.forEach(i => {
                 i.state = "play";
                 i.game = game;
             })
+
+
         }
     }
 };
+
+// const interval = setInterval(function ping() {
+//     wss.clients.forEach(function each(ws) {
+//         console.log(ws.playerName + " " + ws.readyState)
+//     })
+// }, 2000);
 
 const startWss = (function (server) {
     noop = () => {
@@ -147,8 +185,10 @@ const startWss = (function (server) {
     wss = new WebSocket.Server({server});
     const interval = setInterval(function ping() {
         wss.clients.forEach(function each(ws) {
+
             if (ws.isAlive === false) {
                 log("terminated");
+                // ws.opponent.send(JSON.stringify({type: "opponent_disconnect"}));
                 wss.clients.delete(ws);
                 log("Number of clients: " + wss.clients.size); // it's Set
                 return ws.terminate();
@@ -166,7 +206,6 @@ const startWss = (function (server) {
         ws.isAlive = true;
         ws.on('pong', heartbeat);
 
-
         ws.on('message', msg => incomingMsg(msg, ws, req));
 
         log("Number of clients: " + wss.activeClients().length); // it's Set
@@ -174,7 +213,7 @@ const startWss = (function (server) {
 
 
     server.listen(8080, function listening() {
-        log('Listening websockets on ', + server.address().port);
+        log('Listening websockets on ', +server.address().port);
     });
 });
 
