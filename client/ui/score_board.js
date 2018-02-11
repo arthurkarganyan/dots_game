@@ -11,7 +11,7 @@ export default class ScoreBoard {
 
     build() {
         this.tbody.innerHTML = "";
-        for (let player of this.players.sort((a, b) => b.score - a.score)) {
+        for (let player of this.players.slice(0).sort((a, b) => b.score - a.score)) {
             let tr = document.createElement("tr");
 
             tr.appendChild(this._createTd("", "circle", "color: " + player.color));

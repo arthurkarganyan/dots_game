@@ -94,6 +94,7 @@ const nextTurn = () => {
 };
 
 let addPoint = (x, y, player) => {
+    debugger;
     if (!board.addPlayerPoint(x, y, player)) return false;
     scoreBoard.refresh();
     updateProgress(players, board);
