@@ -139,6 +139,7 @@ const showTimeIsUpAlert = () => {
 };
 
 const timeIsUp = () => {
+    if (window.state !== "play") return;
     if (playerTurnIndex === 0) showTimeIsUpAlert();
     nextTurn();
 };
@@ -174,6 +175,7 @@ const drawRejected = () => {
 };
 
 const opponentDisconnect = () => {
+    if(window.state !== "play") return;
     alert("Your oppenent disconnected. Win!");
     quitGame();
 };

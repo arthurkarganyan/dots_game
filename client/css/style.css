@@ -144,6 +144,6 @@ body {
     display: none;
 }
 
-.btn-info:hover {
-    color: white;
+.btn-info, .btn-info:hover, .btn-info.disabled, .btn-info:disabled {
+    color: white !important;
 }
