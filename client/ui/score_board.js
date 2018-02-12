@@ -18,7 +18,6 @@ export default class ScoreBoard {
             tr.appendChild(this._createTd(player.name));
 
             player.scoreElement = this._createTd(player.score);
-            // debugger;
             tr.appendChild(player.scoreElement);
 
             this.tbody.appendChild(tr);

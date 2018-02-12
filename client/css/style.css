@@ -147,3 +147,9 @@ body {
 .btn-info, .btn-info:hover, .btn-info.disabled, .btn-info:disabled {
     color: white !important;
 }
+
+@media only screen and (max-width: 576px) {
+    .modal-dialog {
+        max-width: 90%;
+    }
+}

@@ -96,7 +96,6 @@ const nextTurn = () => {
 };
 
 let addPoint = (x, y, player) => {
-    debugger;
     if (!board.addPlayerPoint(x, y, player)) return false;
     scoreBoard.refresh();
     updateProgress(players, board);
@@ -271,10 +270,6 @@ function animate() {
     board.draw(ctxForeground);
     if (playerTurnIndex === 0)
         mousePoint.draw(ctxForeground);
-    // objects.forEach(object => {
-    //     // debugger;
-    //     object.draw(ctxForeground);
-    // });
 }
 
 board.drawBackground(ctxBackground);
