@@ -23,6 +23,30 @@ describe("eventBus", function () {
         });
     });
 
+    describe("multiple subscribers", () => {
+        let subscriber2;
+
+        beforeEach(function () {
+            eventBus = createEventBus();
+            subscriber = {received: "no"};
+            subscriber2 = {received: "no"};
+
+            eventBus.sub("mega_event", () => subscriber.received = "yes");
+            eventBus.sub("mega_event", () => subscriber2.received = "yes");
+        });
+
+        it("works", function () {
+            expect(subscriber.received).toEqual("no");
+            expect(subscriber2.received).toEqual("no");
+
+            eventBus.pub("mega_event");
+
+            expect(subscriber.received).toEqual("yes");
+            expect(subscriber2.received).toEqual("yes");
+        });
+
+    });
+
     it("on event with data", function () {
         subscriber = {lastMsg: null};
 

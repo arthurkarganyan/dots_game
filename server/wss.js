@@ -4,16 +4,7 @@ const dateTime = require('node-datetime');
 
 let wss;
 
-const games = [];
 const TURN_DURATION = 25000;
-
-function generateHexString(length) {
-    let ret = "";
-    while (ret.length < length) {
-        ret += Math.random().toString(16).substring(2);
-    }
-    return ret.substring(0, length);
-}
 
 const log = msg => {
     let dt = dateTime.create();
@@ -22,11 +13,12 @@ const log = msg => {
 };
 
 const endGameFor = (ws) => {
-    clearInterval(ws.game.timeoutTimer);
+    clearTimeout(ws.game.timeoutTimer);
     clearInterval(ws.game.disconnectTimer);
     delete ws.game;
     delete ws.opponent;
-    delete ws.draw_offers;
+    delete ws.drawOffers;
+    delete ws.inviteCode;
 };
 
 const sendMsg = (ws, msg) => {
@@ -59,8 +51,8 @@ const incomingMsg = (msg, ws, req) => {
     }
 
     if (data.type === "offer_draw") {
-        if (!ws.draw_offers || ws.draw_offers < 3) {
-            ws.draw_offers = ws.draw_offers ? ws.draw_offers + 1 : 1;
+        if (!ws.drawOffers || ws.drawOffers < 3) {
+            ws.drawOffers = ws.drawOffers ? ws.drawOffers + 1 : 1;
             sendMsg(ws.opponent, msg);
         }
     }
@@ -71,17 +63,18 @@ const incomingMsg = (msg, ws, req) => {
     if (data.type === "start_wait") {
         ws.state = "wait";
         ws.playerName = data.msg.playerName;
+        ws.inviteCode = data.msg.inviteCode;
 
-        let waitingClientsArray = wss.waitingClients();
+        let waitingClientsArray = wss.waitingClients().filter(i => i.inviteCode === ws.inviteCode);
 
-        log("Number of waiting clients: " + waitingClientsArray.length);
+        log("Number of waiting clients: " + wss.waitingClients().length);
+
         if (waitingClientsArray.length >= 2) {
             let shuffledColors = _.shuffle(["red", "blue"]);
 
             let a = waitingClientsArray.slice(0, 2);
 
             let turn = Math.floor(Math.random() * 2);
-            let gameId = generateHexString(36);
             let reply;
             reply = {
                 you: {color: shuffledColors[0]},
@@ -89,7 +82,6 @@ const incomingMsg = (msg, ws, req) => {
                     color: shuffledColors[1],
                     playerName: a[1].playerName
                 },
-                gameId: gameId,
                 turn: turn === 0 ? "you" : "opponent",
                 turnDuration: TURN_DURATION - 2000
             };
@@ -105,74 +97,63 @@ const incomingMsg = (msg, ws, req) => {
                     color: shuffledColors[0],
                     playerName: a[0].playerName
                 },
-                gameId: gameId,
                 turn: turn === 1 ? "you" : "opponent",
                 turnDuration: TURN_DURATION
             };
 
             a[1].send(JSON.stringify({type: 'start', msg: reply}));
 
-            let game = {gameId: gameId, turn: turn, players: a};
+            let game = {
+                turn: turn,
+                players: a,
 
-            game.nextTurn = () => {
-                clearInterval(game.timeoutTimer);
-                game.turn = game.turn === 0 ? 1 : 0;
-                log("Turn for: " + game.currentPlayer().playerName);
-                game.startTimer()
-            };
+                nextTurn: () => {
+                    clearInterval(game.timeoutTimer);
+                    game.turn = game.turn === 0 ? 1 : 0;
+                    log("Turn for: " + game.currentPlayer().playerName);
+                    game.startTimer()
+                },
 
-            game.timeIsUp = () => {
-                game.turn = game.turn === 0 ? 1 : 0;
-            };
+                currentPlayer: () => {
+                    return game.players[game.turn];
+                },
 
-            game.currentPlayer = () => {
-                return game.players[game.turn];
-            };
+                startTimer: () => {
+                    log("startTimer");
+                    clearTimeout(game.timeoutTimer);
+                    game.timeoutTimer = setTimeout(function () {
+                        if (a[0].isAlive && a[1].isAlive &&
+                            a[0].readyState === WebSocket.OPEN && a[1].readyState === WebSocket.OPEN) {
+                            log("Time is up for " + game.currentPlayer().playerName);
+                            game.nextTurn();
+                            a.forEach((i) => {
+                                i.send(JSON.stringify({type: "time_is_up"}));
+                            })
+                        }
+                    }, TURN_DURATION);
+                },
 
-            game.startTimer = () => {
-                log("startTimer");
-                clearTimeout(game.timeoutTimer);
-                game.timeoutTimer = setTimeout(function () {
-                    if (a[0].isAlive && a[1].isAlive &&
-                        a[0].readyState === WebSocket.OPEN && a[1].readyState === WebSocket.OPEN) {
-                        log("Time is up for " + game.currentPlayer().playerName);
-                        game.nextTurn();
-                        a.forEach((i) => {
-                            i.send(JSON.stringify({type: "time_is_up"}));
-                        })
-                    }
-                }, TURN_DURATION);
+                disconnectTimer: () => setInterval(() => {
+                    game.players.forEach(i => {
+                            if (i.opponent && i.opponent.readyState !== WebSocket.OPEN) {
+                                i.send(JSON.stringify({type: "opponent_disconnect"}));
+                                endGameFor(i);
+                            }
+                        }
+                    );
+                }, 10000)
             };
 
             game.startTimer();
-
-            game.disconnectTimer = () => setInterval(() => {
-                game.players.forEach(i => {
-                        if (i.opponent && i.opponent.readyState !== WebSocket.OPEN) {
-                            i.send(JSON.stringify({type: "opponent_disconnect"}));
-                            endGameFor(i);
-                        }
-                    }
-                );
-            }, 10000);
-
             game.disconnectTimer();
 
             a.forEach(i => {
                 i.state = "play";
                 i.game = game;
             })
-
-
         }
     }
 };
-
-// const interval = setInterval(function ping() {
-//     wss.clients.forEach(function each(ws) {
-//         console.log(ws.playerName + " " + ws.readyState)
-//     })
-// }, 2000);
 
 const startWss = (function (server) {
     noop = () => {
@@ -188,7 +169,6 @@ const startWss = (function (server) {
 
             if (ws.isAlive === false) {
                 log("terminated");
-                // ws.opponent.send(JSON.stringify({type: "opponent_disconnect"}));
                 wss.clients.delete(ws);
                 log("Number of clients: " + wss.clients.size); // it's Set
                 return ws.terminate();
@@ -210,7 +190,6 @@ const startWss = (function (server) {
 
         log("Number of clients: " + wss.activeClients().length); // it's Set
     });
-
 
     server.listen(8080, function listening() {
         log('Listening websockets on ', +server.address().port);

@@ -1,34 +1,30 @@
 const RModal = require("../rmodal.js");
 
-window.onload = function () {
-    window.playerNameModal = new RModal(document.getElementById('player-name'), {
-        beforeOpen: next => next(),
-        afterOpen: () => {
-        },
-        beforeClose: next => next(),
-        afterClose: () => {
-            document.forms["player-name"]["playerName"].readOnly = false;
-            document.querySelector("#player-name button[type='submit']").style.display = "block";
-            document.querySelector("#player-name #ajax-loader").style.display = "none";
-        }
-    });
+export const createModal = (eventBus) => {
+    eventBus.sub("page_load", () => {
+        window.playerNameModal = new RModal(document.getElementById('player-name'), {
+            beforeOpen: next => next(),
+            afterOpen: () => {
+            },
+            beforeClose: next => next(),
+            afterClose: () => {
+                document.forms["player-name"]["playerName"].readOnly = false;
+                document.querySelector("#player-name button[type='submit']").style.display = "block";
+                document.querySelector("#player-name #ajax-loader").style.display = "none";
+            }
+        });
 
-    window.playerNameModal.submit = function (e) {
-        window.currentPlayerName = document.forms["player-name"]["playerName"].value;
-        document.title = window.currentPlayerName;
-        document.forms["player-name"]["playerName"].readOnly = true;
-        document.querySelector("#player-name button[type='submit']").style.display = "none";
-        document.querySelector("#player-name #ajax-loader").style.display = "block";
-        let el = document.querySelector("#player-name #ajax-loader");
-        el.classList += "animated fadeIn";
+        window.playerNameModal.submit = function (e) {
+            eventBus.pub("change_current_player_name", document.forms["player-name"]["playerName"].value);
+            document.forms["player-name"]["playerName"].readOnly = true;
+            document.querySelector("#player-name button[type='submit']").style.display = "none";
 
-        window.state = "wait";
-        window.sendWsMsg({type: "start_wait", msg: {playerName: window.currentPlayerName}});
 
-        return false;
-    };
+            return false;
+        };
 
-    document.addEventListener('keydown', ev => window.playerNameModal.keydown(ev), false);
+        document.addEventListener('keydown', ev => window.playerNameModal.keydown(ev), false);
 
-    window.playerNameModal.open();
+        window.playerNameModal.open();
+    })
 };

@@ -1,8 +1,7 @@
-export const ws = (function () {
+export const createWs = eventBus => {
     const url = 'ws://' + DOMAIN_NAME + ':8080';
     console.log("Websocket URL: " + url);
     let ws = new WebSocket(url);
-
 
     ws.onopen = function (evt) {
         console.log("Connection Opened");
@@ -23,13 +22,17 @@ export const ws = (function () {
 
         tryConnect(5000);
     };
+
     ws.onerror = function (evt) {
         console.log("Error occured")
     };
 
+    // FIXME refactor
     window.sendWsMsg = function (msg) {
         ws.send(JSON.stringify(msg));
     };
 
+    eventBus.sub("send_ws_msg", window.sendWsMsg);
+
     return ws;
-})();
+};

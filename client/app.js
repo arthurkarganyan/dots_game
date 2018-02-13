@@ -4,12 +4,34 @@ import ScoreBoard from "./ui/score_board";
 
 import './lib/web_sockets';
 import './lib/state';
-import './lib/modal';
+
+import {createModal} from './lib/modal';
 import {updateProgress} from './lib/progress';
 
 import CursorPoint from "./models/cursor_point";
 import Timer from "./ui/timer";
-import {ws} from "./lib/web_sockets";
+import {createWs} from "./lib/web_sockets";
+import {createEventBus} from "./lib/event_bus";
+import {createInviteLinkJoint} from "./joints/invite_link_joint";
+import {generateHexString} from "../utils/hex";
+
+const eventBus = createEventBus();
+
+window.eventBus = eventBus;
+
+const ws = createWs(eventBus);
+const modal = createModal(eventBus);
+const inviteLinkJoint = createInviteLinkJoint(eventBus, document, generateHexString, window);
+
+window.onload = () => {
+    eventBus.pub("page_load", location)
+};
+
+let currentPlayerName;
+
+eventBus.sub("change_current_player_name", name => {
+    currentPlayerName = name;
+});
 
 // const lumen = require("./css/lumen.bootstrap.css");
 // const css = require("./css/animate.css");
@@ -44,7 +66,7 @@ const gameStart = (data) => {
     window.changeState("play");
     window.playerNameModal.close();
 
-    currentPlayer = Player.build(data.you.color, window.currentPlayerName);
+    currentPlayer = Player.build(data.you.color, currentPlayerName);
     opponent = Player.build(data.opponent.color, data.opponent.playerName);
     players = [currentPlayer, opponent];
     playerTurnIndex = data.turn === "you" ? 0 : 1;
@@ -59,7 +81,6 @@ const gameStart = (data) => {
 
     objects.push(mousePoint);
     scoreBoard.refresh();
-    window.gameId = data.gameId;
 
     timer.activate(playerTurnIndex, mover());
     timer.setDuration(data.turnDuration);
@@ -68,6 +89,13 @@ const gameStart = (data) => {
     updateProgress(players, board);
 
     document.querySelector("audio#connected").play();
+
+    eventBus.pub("game_start");
+};
+
+
+window.onhashchange = () => {
+    eventBus.pub("onhashchange", location.hash)
 };
 
 let p = navigator.platform;
@@ -144,6 +172,8 @@ const timeIsUp = () => {
 const quitGame = () => {
     timer.stop();
     window.state = "id";
+
+    eventBus.pub("quit_game");
     window.playerNameModal.open();
 };
 
@@ -173,7 +203,7 @@ const drawRejected = () => {
 };
 
 const opponentDisconnect = () => {
-    if(window.state !== "play") return;
+    if (window.state !== "play") return;
     document.querySelector("audio#win").play();
     alert("Your oppenent disconnected. Win!");
     quitGame();

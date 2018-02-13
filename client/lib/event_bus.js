@@ -21,7 +21,12 @@ export const createEventBus = () => {
     };
 
     eventBus.pub = (key, data) => {
-        if (!eventList[key]) return;
+        console.log("Emitted " + key + ", data: " + data);
+
+        if (!eventList[key]) {
+            console.log("no subscribers found for key: " + key);
+            return;
+        }
 
         eventList[key].before.forEach(i => i(data));
         eventList[key].on.forEach(i => i(data));
