@@ -36,11 +36,9 @@ export default class Timer {
 
         document.querySelector(".wrapper .filler").style.background = mover.color;
         document.querySelector(".wrapper .spinner").style.background = mover.color;
-        // this.wrapper.classList += " active";
     }
 
     stop() {
-        // this.wrapper.classList.remove("active");
         this.spinner.style.transform = 'rotate(' + 0 + 'deg)';
         this.mask.style.opacity = 1;
         this.filler.style.opacity = 0;

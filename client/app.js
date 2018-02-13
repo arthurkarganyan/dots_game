@@ -70,10 +70,6 @@ const gameStart = (data) => {
     document.querySelector("audio#connected").play();
 };
 
-
-window.waiting = true;
-
-
 let p = navigator.platform;
 if (p === 'iPad' || p === 'iPhone' || p === 'iPod') {
     let el = document.querySelector("#mobile_help");
@@ -152,6 +148,7 @@ const quitGame = () => {
 };
 
 const opponentSurrendered = () => {
+    // FIXME sound expected
     alert("Your opponent surrendered!");
     quitGame();
 };
