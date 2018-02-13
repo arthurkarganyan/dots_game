@@ -10,13 +10,11 @@ describe("eventBus", function () {
             subscriber = {received: "no"};
 
             subscriber.OnMegaEvent = () => subscriber.received = "yes";
-
         });
 
         it("on event with data", () => eventBus.sub("mega_event", subscriber.OnMegaEvent));
         it("before event with data", () => eventBus.sub("before.mega_event", subscriber.OnMegaEvent));
         it("after event with data", () => eventBus.sub("after.mega_event", subscriber.OnMegaEvent));
-
 
         afterEach(function () {
             expect(subscriber.received).toEqual("no");
@@ -26,9 +24,7 @@ describe("eventBus", function () {
     });
 
     it("on event with data", function () {
-        let subscriber = {
-            lastMsg: null
-        };
+        subscriber = {lastMsg: null};
 
         subscriber.onMegaEvent = (data) => {
             subscriber.lastMsg = data;
