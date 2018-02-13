@@ -7,7 +7,7 @@ describe("inviteLinkJoint", function () {
     let eventBus;
     let inviteLinkJoint;
     let docMock;
-    
+
     //
     // TODO reanimate
     // describe("data", function () {
