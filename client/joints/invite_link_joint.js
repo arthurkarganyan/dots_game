@@ -52,7 +52,7 @@ export const createInviteLinkJoint = (eventBus, doc, generateHexFunc, window) =>
         });
     };
 
-    const removeMark = (location) => {
+    const removeMark = () => {
         inviteCode = null;
         let hash = location.hash.replace('#', '');
 
@@ -62,8 +62,7 @@ export const createInviteLinkJoint = (eventBus, doc, generateHexFunc, window) =>
     };
 
     eventBus.sub("after.page_load", detectInviteLink);
-    eventBus.sub("after.page_load", removeMark);
-    eventBus.sub("quit_game", removeMark);
+    eventBus.sub("before.game_start", removeMark);
     eventBus.sub("game_start", function hideInviteDiv() {
         let inviteDiv = doc.querySelector("div#invite");
         inviteDiv.style.display = "none";
