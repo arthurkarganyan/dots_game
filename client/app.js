@@ -15,6 +15,7 @@ import {createEventBus} from "./lib/event_bus";
 import {createInviteLinkJoint} from "./joints/invite_link_joint";
 import {generateHexString} from "../utils/hex";
 import {createChatJoint} from "./joints/chat_joint";
+import {playAudio} from "./lib/play_audio";
 
 const eventBus = createEventBus();
 
@@ -90,7 +91,7 @@ const gameStart = (data) => {
     animate();
     updateProgress(players, board);
 
-    document.querySelector("audio#connected").play();
+    playAudio("connected");
 
     eventBus.pub("game_start");
 };
@@ -180,7 +181,7 @@ const quitGame = () => {
 };
 
 const opponentSurrendered = () => {
-    // FIXME sound expected
+    playAudio("win");
     alert("Your opponent surrendered!");
     quitGame();
 };
@@ -206,7 +207,7 @@ const drawRejected = () => {
 
 const opponentDisconnect = () => {
     if (window.state !== "play") return;
-    document.querySelector("audio#win").play();
+    playAudio("win");
     alert("Your oppenent disconnected. Win!");
     quitGame();
 };
@@ -215,7 +216,7 @@ const fullBoard = () => {
     let score = players.map(i => i.score);
 
     if (score[0] > score[1]) {
-        document.querySelector("audio#win").play();
+        playAudio("win");
         alert("The game is over. You Won!")
     }
 
@@ -224,7 +225,7 @@ const fullBoard = () => {
     }
 
     if (score[0] < score[1]) {
-        document.querySelector("audio#lose").play();
+        playAudio("lose");
         alert("The game is over. You Lost!")
     }
 
