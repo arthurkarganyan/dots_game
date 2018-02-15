@@ -60,6 +60,9 @@ const incomingMsg = (msg, ws, req) => {
     if (data.type === "reject_draw")
         sendMsg(ws.opponent, msg);
 
+    if (data.type === "send_chat_msg")
+        sendMsg(ws.opponent, msg);
+
     if (data.type === "start_wait") {
         ws.state = "wait";
         ws.playerName = data.msg.playerName;

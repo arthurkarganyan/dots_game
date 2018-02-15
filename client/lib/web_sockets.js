@@ -27,10 +27,7 @@ export const createWs = eventBus => {
         console.log("Error occured")
     };
 
-    // FIXME refactor
-    window.sendWsMsg = function (msg) {
-        ws.send(JSON.stringify(msg));
-    };
+    window.sendWsMsg = msg => ws.send(JSON.stringify(msg));
 
     eventBus.sub("send_ws_msg", window.sendWsMsg);
 

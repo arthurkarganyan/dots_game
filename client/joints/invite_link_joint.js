@@ -3,7 +3,7 @@ export const createInviteLinkJoint = (eventBus, doc, generateHexFunc, window) =>
     let inviteCode;
     let currentPlayerName;
 
-    const detectInviteLink = (location) => {
+    const detectInviteLink = () => {
         if (location.href.slice(-1) === "#") return;
 
         let index = location.href.indexOf("#");

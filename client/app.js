@@ -14,6 +14,7 @@ import {createWs} from "./lib/web_sockets";
 import {createEventBus} from "./lib/event_bus";
 import {createInviteLinkJoint} from "./joints/invite_link_joint";
 import {generateHexString} from "../utils/hex";
+import {createChatJoint} from "./joints/chat_joint";
 
 const eventBus = createEventBus();
 
@@ -22,9 +23,10 @@ window.eventBus = eventBus;
 const ws = createWs(eventBus);
 const modal = createModal(eventBus);
 const inviteLinkJoint = createInviteLinkJoint(eventBus, document, generateHexString, window);
+const chatJoint = createChatJoint(eventBus, {document: document, window: window});
 
 window.onload = () => {
-    eventBus.pub("page_load", location)
+    eventBus.pub("page_load")
 };
 
 let currentPlayerName;
@@ -243,7 +245,8 @@ ws.onmessage = function (evt) {
     if (msg.type === "opponent_disconnect") return opponentDisconnect();
     if (msg.type === "full_board") return fullBoard();
 
-    throw("Unknown msg type: " + msg.type);
+    eventBus.pub(msg.type + ".server", msg.msg);
+    // throw("Unknown msg type: " + msg.type);
 };
 
 
