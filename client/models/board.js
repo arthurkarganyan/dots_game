@@ -47,7 +47,7 @@ export default class Board {
         }
 
         player.livePointsCount++;
-
+        this.lastDot = newPoint;
         return true;
     }
 
@@ -82,6 +82,13 @@ export default class Board {
         this.getPlayerPoints().forEach(i => {
             if (i.dead) i.draw(ctx)
         });
+
+        if (this.lastDot) {
+            let radiusWas = this.lastDot.graphicalPoint.radius;
+            this.lastDot.graphicalPoint.radius = 8;
+            this.lastDot.draw(ctx);
+            this.lastDot.graphicalPoint.radius = radiusWas;
+        }
 
         for (let playerColor in this.territories) {
             ctx.save();
